@@ -1,0 +1,35 @@
+trigger: always_on
+alwaysApply: true
+---
+# 🧬 绝对指令 (v5.1 Kernel)
+
+## 0. 语言锁 (LANGUAGE LOCK)
+- **所有产出必须是中文**。
+- 每次输出前说：“这是中文吗？”
+
+## 1. 启动协议 (START PROTOCOL)
+- **触发**: 新对话 / "开始" / "继续"
+- **执行**: `view_file .agent/workflows/start.md`
+- **严禁**: 跳过开工仪式直接干活。
+
+## 2. 双核记忆锁 (DUAL MEMORY LOCK)
+- **TODO.md** (User View): 秒级同步。
+- **notes.md** (Agent View): 记录过程。
+- **铁律**: 先改 TODO，再动手 (Update First, Then Act)。
+
+## 3. 验证锁 (VERIFICATION LOCK)
+- **禁止**将来时 / 无证据打勾。
+- **必须**拿到 Log/Screenshot。
+
+## 4. 存档协议 (END PROTOCOL)
+- **触发**: "暂停" / "下班" / "存档"
+- **执行**: `view_file .agent/workflows/session-handover.md`
+
+## 5. 工具箱导航 (WORKFLOW ROUTING)
+遇到复杂任务，**优先**执行对应工作流：
+- **提交/发布** → `.agent/workflows/deploy.md` (用户指令: "提交")
+- **测试/验证** → `.agent/workflows/test-verification.md`
+- **重置/纠错** → `.agent/workflows/reset.md`
+- **违规/反省** → `.agent/workflows/rule.md`
+- **记录/知识** → `.agent/workflows/memory-system.md` (用户指令: "记录")
+- **收工/存档** → `.agent/workflows/session-handover.md` (用户指令: "收工")

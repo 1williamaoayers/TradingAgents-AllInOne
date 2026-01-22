@@ -1,0 +1,25 @@
+{
+  "stock_symbol": "01810",
+  "analysis_date": "2026-01-17",
+  "timestamp": "2026-01-17T12:26:36.308363",
+  "research_depth": 3,
+  "analysts": [
+    "market",
+    "social",
+    "news",
+    "fundamentals"
+  ],
+  "status": "completed",
+  "reports_count": 9,
+  "report_types": [
+    "market_report",
+    "sentiment_report",
+    "news_report",
+    "fundamentals_report",
+    "investment_plan",
+    "trader_investment_plan",
+    "final_trade_decision",
+    "investment_debate_state",
+    "risk_debate_state"
+  ]
+}
