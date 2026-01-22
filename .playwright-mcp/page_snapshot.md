@@ -1,0 +1,204 @@
+### New console messages
+- [WARNING] WebSocket onclose @ http://localhost:8501/static/js/index.DFT9nVK6.js:150
+- [ERROR] Failed to load resource: net::ERR_EMPTY_RESPONSE @ http://localhost:8501/_stcore/host-config...
+- [ERROR] Failed to load resource: net::ERR_EMPTY_RESPONSE @ http://localhost:8501/_stcore/health:0
+- [ERROR] Failed to load resource: net::ERR_EMPTY_RESPONSE @ http://localhost:8501/_stcore/health:0
+- [ERROR] Failed to load resource: net::ERR_EMPTY_RESPONSE @ http://localhost:8501/_stcore/host-config...
+- [ERROR] Failed to load resource: net::ERR_EMPTY_RESPONSE @ http://localhost:8501/_stcore/health:0
+- [ERROR] Failed to load resource: net::ERR_EMPTY_RESPONSE @ http://localhost:8501/_stcore/host-config...
+- [ERROR] Failed to load resource: net::ERR_EMPTY_RESPONSE @ http://localhost:8501/_stcore/health:0
+- [ERROR] Failed to load resource: net::ERR_EMPTY_RESPONSE @ http://localhost:8501/_stcore/host-config...
+- [ERROR] Failed to load resource: net::ERR_EMPTY_RESPONSE @ http://localhost:8501/_stcore/health:0
+- [ERROR] Failed to load resource: net::ERR_EMPTY_RESPONSE @ http://localhost:8501/_stcore/host-config...
+- [ERROR] Failed to load resource: net::ERR_EMPTY_RESPONSE @ http://localhost:8501/_stcore/health:0
+- [ERROR] Client Error in reaching server endpoint - No response received when attempting to reach /_s...
+- [ERROR] Is Streamlit still running? If you accidentally stopped Streamlit, just restart it in your t...
+- [ERROR] Failed to load resource: net::ERR_EMPTY_RESPONSE @ http://localhost:8501/_stcore/host-config...
+- [ERROR] Failed to load resource: net::ERR_CONNECTION_RESET @ http://localhost:8501/_stcore/host-conf...
+- [ERROR] Client Error in reaching server endpoint - No response received when attempting to reach /_s...
+- [ERROR] Is Streamlit still running? If you accidentally stopped Streamlit, just restart it in your t...
+- [ERROR] Failed to load resource: net::ERR_CONNECTION_RESET @ http://localhost:8501/_stcore/health:0
+- [ERROR] Failed to load resource: net::ERR_EMPTY_RESPONSE @ http://localhost:8501/_stcore/host-config...
+- [ERROR] Client Error in reaching server endpoint - No response received when attempting to reach /_s...
+- [ERROR] Is Streamlit still running? If you accidentally stopped Streamlit, just restart it in your t...
+- [ERROR] Failed to load resource: net::ERR_EMPTY_RESPONSE @ http://localhost:8501/_stcore/health:0
+- [ERROR] Failed to load resource: net::ERR_EMPTY_RESPONSE @ http://localhost:8501/_stcore/health:0
+- [ERROR] Client Error in reaching server endpoint - No response received when attempting to reach /_s...
+- [ERROR] Is Streamlit still running? If you accidentally stopped Streamlit, just restart it in your t...
+- [ERROR] Failed to load resource: net::ERR_EMPTY_RESPONSE @ http://localhost:8501/_stcore/host-config...
+- [ERROR] Failed to load resource: net::ERR_EMPTY_RESPONSE @ http://localhost:8501/_stcore/health:0
+- [ERROR] Client Error in reaching server endpoint - No response received when attempting to reach /_s...
+- [ERROR] Is Streamlit still running? If you accidentally stopped Streamlit, just restart it in your t...
+- [ERROR] Failed to load resource: net::ERR_EMPTY_RESPONSE @ http://localhost:8501/_stcore/host-config...
+
+### Page state
+- Page URL: http://localhost:8501/%E9%85%8D%E7%BD%AE%E7%AE%A1%E7%90%86
+- Page Title: Streamlit
+- Page Snapshot:
+```yaml
+- generic [ref=e2]:
+  - list [ref=e23]:
+    - listitem [ref=e24]:
+      - link "app" [ref=e26] [cursor=pointer]:
+        - /url: http://localhost:8501/
+        - generic [ref=e27]: app
+    - listitem [ref=e28]:
+      - link "配置管理" [ref=e30] [cursor=pointer]:
+        - /url: http://localhost:8501/配置管理
+        - generic [ref=e31]: 配置管理
+    - listitem [ref=e32]:
+      - link "配置向导" [ref=e34] [cursor=pointer]:
+        - /url: http://localhost:8501/配置向导
+        - generic [ref=e35]: 配置向导
+    - listitem [ref=e36]:
+      - link "自选股管理" [ref=e38] [cursor=pointer]:
+        - /url: http://localhost:8501/自选股管理
+        - generic [ref=e39]: 自选股管理
+    - listitem [ref=e40]:
+      - link "新闻同步监控" [ref=e42] [cursor=pointer]:
+        - /url: http://localhost:8501/新闻同步监控
+        - generic [ref=e43]: 新闻同步监控
+  - generic [ref=e3]:
+    - banner [ref=e4]:
+      - generic [ref=e7]:
+        - button "Deploy" [ref=e9] [cursor=pointer]:
+          - generic [ref=e11]: Deploy
+        - button [ref=e13] [cursor=pointer]:
+          - img [ref=e14]
+    - generic [ref=e47]:
+      - heading "⚙️ 配置管理" [level=1] [ref=e728]:
+        - text: ⚙️ 配置管理
+        - generic [ref=e729]:
+          - link "Link to heading":
+            - /url: "#c4ce51ca"
+            - img
+      - generic [ref=e731]:
+        - button "🧙 配置向导" [ref=e736] [cursor=pointer]:
+          - paragraph [ref=e740]: 🧙 配置向导
+        - button "🔄 刷新" [ref=e745] [cursor=pointer]:
+          - paragraph [ref=e749]: 🔄 刷新
+        - button "📥 导出配置" [ref=e754] [cursor=pointer]:
+          - paragraph [ref=e758]: 📥 导出配置
+        - button "📤 导入配置" [ref=e763] [cursor=pointer]:
+          - paragraph [ref=e767]: 📤 导入配置
+      - separator [ref=e772]
+      - heading "🤖 AI模型" [level=3] [ref=e777]:
+        - text: 🤖 AI模型
+        - generic [ref=e778]:
+          - link "Link to heading":
+            - /url: "#ai"
+            - img
+      - group [ref=e781]:
+        - generic "keyboard_arrow_down DeepSeek V3" [active] [ref=e1092] [cursor=pointer]:
+          - generic [ref=e783]:
+            - generic [ref=e1094]: keyboard_arrow_down
+            - paragraph [ref=e788]: DeepSeek V3
+        - generic [ref=e792]:
+          - alert [ref=e797]:
+            - paragraph [ref=e802]: "✅ 已配置: sk-y****here"
+          - button "编辑" [ref=e807] [cursor=pointer]:
+            - paragraph [ref=e811]: 编辑
+          - button "测试" [ref=e816] [cursor=pointer]:
+            - paragraph [ref=e820]: 测试
+      - group [ref=e823]:
+        - generic "keyboard_arrow_down 通义千问" [ref=e824] [cursor=pointer]:
+          - generic [ref=e825]:
+            - generic [ref=e827]: keyboard_arrow_down
+            - paragraph [ref=e830]: 通义千问
+        - generic [ref=e834]:
+          - alert [ref=e839]:
+            - paragraph [ref=e844]: "✅ 已配置: sk-y****here"
+          - button "编辑" [ref=e849] [cursor=pointer]:
+            - paragraph [ref=e853]: 编辑
+          - button "测试" [ref=e858] [cursor=pointer]:
+            - paragraph [ref=e862]: 测试
+      - group [ref=e865]:
+        - generic "keyboard_arrow_right OpenAI GPT" [ref=e866] [cursor=pointer]:
+          - generic [ref=e867]:
+            - generic [ref=e869]: keyboard_arrow_right
+            - paragraph [ref=e872]: OpenAI GPT
+      - separator [ref=e877]
+      - heading "📊 数据源" [level=3] [ref=e882]:
+        - text: 📊 数据源
+        - generic [ref=e883]:
+          - link "Link to heading":
+            - /url: "#efbe4240"
+            - img
+      - group [ref=e886]:
+        - generic "keyboard_arrow_down FinnHub" [ref=e887] [cursor=pointer]:
+          - generic [ref=e888]:
+            - generic [ref=e890]: keyboard_arrow_down
+            - paragraph [ref=e893]: FinnHub
+        - generic [ref=e897]:
+          - alert [ref=e902]:
+            - paragraph [ref=e907]: "✅ 已配置: your****here"
+          - button "编辑" [ref=e912] [cursor=pointer]:
+            - paragraph [ref=e916]: 编辑
+          - button "测试" [ref=e921] [cursor=pointer]:
+            - paragraph [ref=e925]: 测试
+      - group [ref=e928]:
+        - generic "keyboard_arrow_down Alpha Vantage" [ref=e929] [cursor=pointer]:
+          - generic [ref=e930]:
+            - generic [ref=e932]: keyboard_arrow_down
+            - paragraph [ref=e935]: Alpha Vantage
+        - generic [ref=e939]:
+          - alert [ref=e944]:
+            - paragraph [ref=e949]: "✅ 已配置: your****here"
+          - button "编辑" [ref=e954] [cursor=pointer]:
+            - paragraph [ref=e958]: 编辑
+          - button "测试" [ref=e963] [cursor=pointer]:
+            - paragraph [ref=e967]: 测试
+      - group [ref=e970]:
+        - generic "keyboard_arrow_down Serper (Google)" [ref=e971] [cursor=pointer]:
+          - generic [ref=e972]:
+            - generic [ref=e974]: keyboard_arrow_down
+            - paragraph [ref=e977]: Serper (Google)
+        - generic [ref=e981]:
+          - alert [ref=e986]:
+            - paragraph [ref=e991]: "✅ 已配置: your****here"
+          - button "编辑" [ref=e996] [cursor=pointer]:
+            - paragraph [ref=e1000]: 编辑
+          - button "测试" [ref=e1005] [cursor=pointer]:
+            - paragraph [ref=e1009]: 测试
+      - separator [ref=e1014]
+      - heading "💾 数据库" [level=3] [ref=e1019]:
+        - text: 💾 数据库
+        - generic [ref=e1020]:
+          - link "Link to heading":
+            - /url: "#5d5472c3"
+            - img
+      - group [ref=e1023]:
+        - generic "keyboard_arrow_right MongoDB" [ref=e1024] [cursor=pointer]:
+          - generic [ref=e1025]:
+            - generic [ref=e1027]: keyboard_arrow_right
+            - paragraph [ref=e1030]: MongoDB
+      - group [ref=e1033]:
+        - generic "keyboard_arrow_right Redis" [ref=e1034] [cursor=pointer]:
+          - generic [ref=e1035]:
+            - generic [ref=e1037]: keyboard_arrow_right
+            - paragraph [ref=e1040]: Redis
+      - separator [ref=e1045]
+      - heading "🔧 系统配置" [level=3] [ref=e1050]:
+        - text: 🔧 系统配置
+        - generic [ref=e1051]:
+          - link "Link to heading":
+            - /url: "#58813b03"
+            - img
+      - generic [ref=e1053]:
+        - generic [ref=e1055]:
+          - paragraph [ref=e1060]:
+            - strong [ref=e1061]: 时区
+            - text: ": Asia/Shanghai"
+          - paragraph [ref=e1066]:
+            - strong [ref=e1067]: 日志级别
+            - text: ": INFO"
+        - generic [ref=e1069]:
+          - paragraph [ref=e1074]:
+            - strong [ref=e1075]: 内存功能
+            - text: ": ✅ 启用"
+          - paragraph [ref=e1080]:
+            - strong [ref=e1081]: 缓存策略
+            - text: ": integrated"
+      - button "修改系统配置" [ref=e1084] [cursor=pointer]:
+        - paragraph [ref=e1088]: 修改系统配置
+```

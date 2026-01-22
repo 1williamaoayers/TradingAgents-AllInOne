@@ -154,3 +154,11 @@ P.S. 补充确认: GitHub Actions 的 'dockerfile' 输入参数警告已在本�
 - **动作**: `mcp_playwright_browser_navigate` (http://localhost:8501)
 - **结果**: 页面加载成功。Title: "Streamlit"。
 - **状态**: 前端可访问性验证通过。
+
+## 配置管理功能验证 (Config UI)
+- **动作**: 验证 Serper 显示 & DeepSeek 编辑字段。
+- **结果**:
+    - Serper (Google) 选项卡出现。
+    - DeepSeek 编辑模式下可见 "启用此模型" 复选框。
+    - DeepSeek 编辑模式下可见 "API Base URL" 输入框。
+- **结论**: 需求已全部实现。

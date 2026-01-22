@@ -17,8 +17,7 @@ def render_config_management():
     # 顶部操作按钮
     col1, col2, col3, col4 = st.columns(4)
     with col1:
-        if st.button("🧙 配置向导", use_container_width=True):
-            st.switch_page("pages/2_配置向导.py")
+       pass
     
     with col2:
         if st.button("🔄 刷新", use_container_width=True):
@@ -140,6 +139,35 @@ def render_config_management():
                     with st.spinner("测试中..."):
                         # 这里可以添加实际的测试逻辑
                         st.info("测试功能开发中...")
+
+            # 编辑模式
+            if st.session_state.get(f"editing_source_{key}", False):
+                new_key = st.text_input(
+                    "新API密钥",
+                    type="password",
+                    key=f"new_key_source_{key}"
+                )
+                
+                col1, col2 = st.columns(2)
+                with col1:
+                    if st.button("💾 保存", key=f"save_source_{key}"):
+                        if new_key:
+                            env_key = f"{key.upper()}_API_KEY"
+                            res = config_manager.update_config(env_key, new_key)
+                            if res["success"]:
+                                st.success("✅ 已保存")
+                                st.session_state[f"editing_source_{key}"] = False
+                                time.sleep(0.5)
+                                st.rerun()
+                            else:
+                                st.error(f"保存失败: {res['message']}")
+                        else:
+                             st.warning("⚠️ 密钥不能为空")
+                
+                with col2:
+                    if st.button("取消", key=f"cancel_source_{key}"):
+                        st.session_state[f"editing_source_{key}"] = False
+                        st.rerun()
     
     st.markdown("---")
     
@@ -159,8 +187,7 @@ def render_config_management():
             st.info("⚪ 未启用")
         
         if st.button("配置MongoDB", key="config_mongodb"):
-            st.session_state.config_step = 3
-            st.switch_page("pages/2_配置向导.py")
+             st.info("请使用环境变量配置数据库连接")
     
     # Redis
     with st.expander("Redis", expanded=config["databases"]["redis"]["enabled"]):
@@ -174,8 +201,7 @@ def render_config_management():
             st.info("⚪ 未启用")
         
         if st.button("配置Redis", key="config_redis"):
-            st.session_state.config_step = 3
-            st.switch_page("pages/2_配置向导.py")
+             st.info("请使用环境变量配置数据库连接")
     
     st.markdown("---")
     
@@ -193,8 +219,7 @@ def render_config_management():
         st.write(f"**缓存策略**: {system['cache_strategy']}")
     
     if st.button("修改系统配置"):
-        st.session_state.config_step = 4
-        st.switch_page("pages/2_配置向导.py")
+        st.info("请修改 .env 文件或环境变量以调整系统配置")
 
 
 if __name__ == "__main__":
