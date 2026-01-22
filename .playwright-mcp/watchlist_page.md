@@ -1,0 +1,153 @@
+### Page state
+- Page URL: http://localhost:8501/%E8%87%AA%E9%80%89%E8%82%A1%E7%AE%A1%E7%90%86
+- Page Title: 自选股管理
+- Page Snapshot:
+```yaml
+- generic [ref=e2]:
+  - list [ref=e10]:
+    - listitem [ref=e11]:
+      - link "app" [ref=e13] [cursor=pointer]:
+        - /url: http://localhost:8501/
+        - generic [ref=e14]: app
+    - listitem [ref=e15]:
+      - link "配置管理" [ref=e17] [cursor=pointer]:
+        - /url: http://localhost:8501/配置管理
+        - generic [ref=e18]: 配置管理
+    - listitem [ref=e19]:
+      - link "自选股管理" [ref=e21] [cursor=pointer]:
+        - /url: http://localhost:8501/自选股管理
+        - generic [ref=e22]: 自选股管理
+    - listitem [ref=e23]:
+      - link "新闻同步监控" [ref=e25] [cursor=pointer]:
+        - /url: http://localhost:8501/新闻同步监控
+        - generic [ref=e26]: 新闻同步监控
+  - generic [ref=e3]:
+    - banner [ref=e30]:
+      - generic [ref=e33]:
+        - button "Deploy" [ref=e35] [cursor=pointer]:
+          - generic [ref=e37]: Deploy
+        - button [ref=e39] [cursor=pointer]:
+          - img [ref=e40]
+    - generic [ref=e43]:
+      - heading "⭐ 自选股管理" [level=1] [ref=e48]:
+        - text: ⭐ 自选股管理
+        - generic [ref=e49]:
+          - link "Link to heading":
+            - /url: "#2485af73"
+            - img
+      - generic [ref=e51]:
+        - separator [ref=e58]
+        - alert [ref=e63]:
+          - paragraph [ref=e68]: 🟢 已连接
+      - generic [ref=e70]:
+        - heading "📊 当前自选股 (1只)" [level=3] [ref=e77]:
+          - text: 📊 当前自选股 (1只)
+          - generic [ref=e78]:
+            - link "Link to heading":
+              - /url: "#1"
+              - img
+        - button "🔄 刷新" [ref=e83] [cursor=pointer]:
+          - paragraph [ref=e87]: 🔄 刷新
+        - button "📥 导入" [ref=e92] [cursor=pointer]:
+          - paragraph [ref=e96]: 📥 导入
+      - separator [ref=e101]
+      - group [ref=e104]:
+        - generic "keyboard_arrow_down ➕ 添加自选股" [ref=e105] [cursor=pointer]:
+          - generic [ref=e106]:
+            - generic [ref=e108]: keyboard_arrow_down
+            - paragraph [ref=e111]: ➕ 添加自选股
+        - generic [ref=e115]:
+          - generic [ref=e119]:
+            - paragraph [ref=e123]: 市场
+            - generic [ref=e125]:
+              - generic [ref=e126]:
+                - generic [ref=e127]: A股
+                - combobox "Selected A股. 市场" [ref=e129]
+              - img "open" [ref=e131]
+          - generic [ref=e136]:
+            - paragraph [ref=e140]: 股票代码
+            - textbox "股票代码" [ref=e143]:
+              - /placeholder: "如: 000001, 600519"
+          - button "➕ 添加" [ref=e148] [cursor=pointer]:
+            - paragraph [ref=e152]: ➕ 添加
+      - heading "📋 自选股列表" [level=3] [ref=e157]:
+        - text: 📋 自选股列表
+        - generic [ref=e158]:
+          - link "Link to heading":
+            - /url: "#58b67890"
+            - img
+      - group [ref=e161]:
+        - generic "keyboard_arrow_down 港股 (1只)" [ref=e162] [cursor=pointer]:
+          - generic [ref=e163]:
+            - generic [ref=e165]: keyboard_arrow_down
+            - paragraph [ref=e168]: 港股 (1只)
+        - generic [ref=e172]:
+          - paragraph [ref=e179]:
+            - strong [ref=e180]: "01810"
+          - paragraph [ref=e187]: "📅 添加: 2026-01-22"
+          - paragraph [ref=e194]: "📰 新闻: 0条"
+          - button "🗑️" [ref=e202] [cursor=pointer]:
+            - paragraph [ref=e206]: 🗑️
+      - separator [ref=e211]
+      - heading "⚙️ 新闻收集设置" [level=3] [ref=e216]:
+        - text: ⚙️ 新闻收集设置
+        - generic [ref=e217]:
+          - link "Link to heading":
+            - /url: "#99c5686a"
+            - img
+      - generic [ref=e219]:
+        - generic [ref=e221]:
+          - generic [ref=e224] [cursor=pointer]:
+            - checkbox "🔄 自动收集新闻" [checked]
+            - generic [ref=e227]:
+              - paragraph [ref=e229]: 🔄 自动收集新闻
+              - button "Help for 🔄 自动收集新闻" [ref=e233]:
+                - img [ref=e234]
+          - generic [ref=e238]:
+            - generic [ref=e239]:
+              - paragraph [ref=e242]: 📅 收集天数
+              - button "Help for 📅 收集天数" [ref=e246] [cursor=pointer]:
+                - img [ref=e247]
+            - generic [ref=e250]:
+              - spinbutton "📅 收集天数" [ref=e253]: "30"
+              - generic [ref=e254]:
+                - button [ref=e255] [cursor=pointer]:
+                  - img [ref=e256]
+                - button [ref=e258] [cursor=pointer]:
+                  - img [ref=e259]
+        - generic [ref=e262]:
+          - paragraph [ref=e267]:
+            - strong [ref=e268]: ⏰ 收集时间
+            - text: （北京时间）
+          - paragraph [ref=e273]: 支持设置多个时间点，格式：HH:MM（如 08:30）
+          - textbox "时间 1" [ref=e282]:
+            - /placeholder: HH:MM
+            - text: 02:00
+          - button "➕ 添加时间" [ref=e287] [cursor=pointer]:
+            - paragraph [ref=e291]: ➕ 添加时间
+      - button "💾 保存设置" [ref=e294] [cursor=pointer]:
+        - paragraph [ref=e298]: 💾 保存设置
+      - separator [ref=e303]
+      - heading "📊 统计信息" [level=3] [ref=e308]:
+        - text: 📊 统计信息
+        - generic [ref=e309]:
+          - link "Link to heading":
+            - /url: "#3d05bad3"
+            - img
+      - generic [ref=e311]:
+        - generic [ref=e316]:
+          - paragraph [ref=e320]: 自选股总数
+          - paragraph [ref=e324]: "1"
+        - generic [ref=e329]:
+          - paragraph [ref=e333]: 新闻总数
+          - paragraph [ref=e337]: "0"
+        - generic [ref=e342]:
+          - paragraph [ref=e346]: 分析报告
+          - paragraph [ref=e350]: "0"
+        - generic [ref=e355]:
+          - paragraph [ref=e359]: 港股
+          - paragraph [ref=e363]: "1"
+      - separator [ref=e368]
+      - paragraph [ref=e373]: "💾 数据存储: MongoDB 数据库"
+      - paragraph [ref=e378]: "🔐 用户: default_user (演示模式)"
+```

@@ -425,9 +425,35 @@ def render_watchlist_management():
             st.rerun()
         
         # 添加新时间按钮
-        if st.button("➕ 添加时间", use_container_width=True):
             st.session_state.schedule_times.append("12:00")
             st.rerun()
+
+    st.markdown("---")
+    
+    # 基础数据管理
+    st.subheader("📚 基础数据管理")
+    col1, col2 = st.columns([3, 1])
+    with col1:
+        st.write("更新股票代码与名称的映射缓存（支持港股/A股）。")
+        st.caption("上次更新: " + (st.session_state.get('last_stock_sync', '未知')))
+        
+    with col2:
+        if st.button("🔄 同步股票名称", use_container_width=True):
+            with st.spinner("正在从 akshare 拉取最新股票列表 (约需 1 分钟)..."):
+                try:
+                    # 动态导入脚本逻辑
+                    sys.path.insert(0, str(Path(__file__).parent.parent.parent / "scripts"))
+                    from fetch_hk_stocks import fetch_and_cache_hk_stocks
+                    
+                    # 运行同步
+                    fetch_and_cache_hk_stocks()
+                    
+                    st.session_state.last_stock_sync = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                    st.success("✅ 同步完成！已更新股票名称缓存。")
+                    time.sleep(1)
+                    st.rerun() # 刷新页面以应用新名称
+                except Exception as e:
+                    st.error(f"❌ 同步失败: {e}")
 
     
     # 保存按钮

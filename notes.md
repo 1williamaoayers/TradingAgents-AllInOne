@@ -182,5 +182,17 @@ P.S. 补充确认: GitHub Actions 的 'dockerfile' 输入参数警告已在本�
 - **动作**: 在 `start.bat` 和 `start.sh` 中增加 Docker 预检查。
 - **结果**: 如果未安装或未启动 Docker，脚本会直接报错并给出下载链接，防止用户不知所措。
 
+## 终极防线 (Codespaces)
+- **动作**: 创建 `.devcontainer` 并更新 README。
+- **目的**: 提供 "Open in GitHub Codespaces" 按钮。
+- **效果**: 即使本地电脑一团糟，也能在浏览器里一键拥有完美的运行环境。
+
+## 用户体验优化 (HK Names)
+- **问题**: 自选股只显示代码 (01810)，不显示名称。
+- **动作**: 编写 `fetch_hk_stocks.py` 抓取 akshare 数据并注入 MongoDB 缓存。
+- **结果**: 页面成功显示 "小米集团-W" 等真实名称。
+
+
+
 
 
