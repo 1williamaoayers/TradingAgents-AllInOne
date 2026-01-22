@@ -24,15 +24,24 @@ git clone https://github.com/1williamaoayers/TradingAgents-AllInOne.git
 cd TradingAgents-AllInOne
 ```
 
-### 2. 配置 API Key
+### 2. ⚡ 一键启动 (推荐)
+
+**Windows 用户**:
+双击运行 `start.bat`
+
+**Mac/Linux 用户**:
 ```bash
-cp .env.example .env
-nano .env
-# 填入你的 DEEPSEEK_API_KEY 等
+chmod +x start.sh
+./start.sh
 ```
 
-### 3. 一键启动
+> **自动配置说明**: 脚本会自动检测 `.env` 配置文件，如果不存在则自动创建，并拉取最新镜像启动服务。
+
+### 3. (可选) 手动配置 & 启动
+如果您更喜欢手动操作：
 ```bash
+cp .env.example .env
+# 编辑 .env 填入您的 API Key
 docker-compose up -d
 ```
 
