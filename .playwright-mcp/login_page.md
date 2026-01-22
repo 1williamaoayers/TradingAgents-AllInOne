@@ -1,0 +1,75 @@
+### New console messages
+- [WARNING] An iframe which has both allow-scripts and allow-same-origin for its sandbox attribute can...
+- TypeError: Cannot read properties of null (reading 'classList')
+    at detectFoldable (about:srcdoc:...
+- [VERBOSE] [DOM] Password field is not contained in a form: (More info: https://goo.gl/9p2vKq) %o @ h...
+
+### Page state
+- Page URL: http://localhost:8501/
+- Page Title: TradingAgents-CN 股票分析平台
+- Page Snapshot:
+```yaml
+- generic [ref=e2]:
+  - list [ref=e10]:
+    - listitem [ref=e11]:
+      - link "app" [ref=e13] [cursor=pointer]:
+        - /url: http://localhost:8501/
+        - generic [ref=e14]: app
+    - listitem [ref=e15]:
+      - link "配置管理" [ref=e17] [cursor=pointer]:
+        - /url: http://localhost:8501/配置管理
+        - generic [ref=e18]: 配置管理
+    - listitem [ref=e19]:
+      - link "自选股管理" [ref=e21] [cursor=pointer]:
+        - /url: http://localhost:8501/自选股管理
+        - generic [ref=e22]: 自选股管理
+    - listitem [ref=e23]:
+      - link "新闻同步监控" [ref=e25] [cursor=pointer]:
+        - /url: http://localhost:8501/新闻同步监控
+        - generic [ref=e26]: 新闻同步监控
+  - generic [ref=e30]:
+    - generic:
+      - iframe
+    - generic [ref=e109]:
+      - heading "🚀 TradingAgents-CN" [level=1] [ref=e111]:
+        - text: 🚀 TradingAgents-CN
+        - generic [ref=e112]:
+          - link "Link to heading":
+            - /url: "#trading-agents-cn"
+            - img
+      - paragraph [ref=e113]: AI驱动的股票交易分析平台 · 让投资更智能
+    - generic [ref=e122]:
+      - heading "🔐 用户登录" [level=3] [ref=e128]:
+        - text: 🔐 用户登录
+        - generic [ref=e129]:
+          - link "Link to heading":
+            - /url: "#3d510f9c"
+            - img
+      - textbox "用户名" [ref=e134]:
+        - /placeholder: 请输入您的用户名（首次使用：admin）
+        - text: admin
+      - generic [ref=e138]:
+        - textbox "密码" [ref=e139]:
+          - /placeholder: 请输入您的密码（首次使用：admin123）
+        - button "Show password text" [ref=e140] [cursor=pointer]:
+          - img "Show password text" [ref=e141]
+      - button "🚀 立即登录" [ref=e149] [cursor=pointer]:
+        - paragraph [ref=e153]: 🚀 立即登录
+    - generic [ref=e160]:
+      - generic [ref=e161]:
+        - generic [ref=e162]: 📊
+        - generic [ref=e163]: 智能分析
+        - generic [ref=e164]: AI驱动的股票分析
+      - generic [ref=e165]:
+        - generic [ref=e166]: 🔍
+        - generic [ref=e167]: 深度研究
+        - generic [ref=e168]: 全方位市场洞察
+      - generic [ref=e169]:
+        - generic [ref=e170]: ⚡
+        - generic [ref=e171]: 实时数据
+        - generic [ref=e172]: 最新市场信息
+      - generic [ref=e173]:
+        - generic [ref=e174]: 🛡️
+        - generic [ref=e175]: 风险控制
+        - generic [ref=e176]: 智能风险评估
+```
