@@ -24,7 +24,14 @@ git clone https://github.com/1williamaoayers/TradingAgents-AllInOne.git
 cd TradingAgents-AllInOne
 ```
 
-### 2. ⚡ 一键启动 (推荐)
+### 2. 🛡️ 终极防丢脸方案 (Codespaces)
+**如果您的电脑没有 Docker，或者网络很卡，请直接点击下方按钮：**
+
+[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/1williamaoayers/TradingAgents-AllInOne)
+
+> **云端运行说明**: 点击后会自动为您启动一个云端 Linux 环境，内置所有依赖。进入后在终端输入 `docker-compose up -d` 即可。
+
+### 3. ⚡ 一键启动 (本地部署)
 
 **Windows 用户**:
 双击运行 `start.bat`

@@ -178,4 +178,9 @@ P.S. 补充确认: GitHub Actions 的 'dockerfile' 输入参数警告已在本�
 - **动作**: 更新 `README.md`，推荐使用 `start.bat` / `start.sh`。
 - **目的**: 确保新用户按文档操作时，能自动创建 .env 配置文件，避免启动失败。
 
+## 脚本加固 (Start Scripts)
+- **动作**: 在 `start.bat` 和 `start.sh` 中增加 Docker 预检查。
+- **结果**: 如果未安装或未启动 Docker，脚本会直接报错并给出下载链接，防止用户不知所措。
+
+
 
