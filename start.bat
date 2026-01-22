@@ -2,7 +2,19 @@
 chcp 65001 >nul
 echo ---------------------------------------------------
 echo  TradingAgents-CN 启动脚本 (Windows)
-echo ---------------------------------------------------
+
+:: 检查 Docker 是否在运行
+docker info >nul 2>&1
+if errorlevel 1 (
+    echo [ERROR] 未检测到 Docker 运行！
+    echo ---------------------------------------------------
+    echo 请先安装 Docker Desktop 并确保已启动。
+    echo 下载地址: https://www.docker.com/products/docker-desktop/
+    echo ---------------------------------------------------
+    pause
+    exit
+)
+
 
 if not exist .env (
     echo [INFO] 未检测到配置文件，正在从模板创建...

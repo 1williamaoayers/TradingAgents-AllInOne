@@ -9,6 +9,15 @@ echo -e "${GREEN}---------------------------------------------------${NC}"
 echo -e "${GREEN} TradingAgents-CN 启动脚本 (Linux/Mac)${NC}"
 echo -e "${GREEN}---------------------------------------------------${NC}"
 
+# 检查 Docker 是否在运行
+if ! docker info > /dev/null 2>&1; then
+    echo -e "${YELLOW}[ERROR] 未检测到 Docker 运行！${NC}"
+    echo "请先安装 Docker 并确保已启动。"
+    echo "下载地址: https://www.docker.com/products/docker-desktop/"
+    exit 1
+fi
+
+
 # 检查并创建 .env
 if [ ! -f .env ]; then
     echo -e "${YELLOW}[INFO] 未检测到配置文件，正在从模板创建...${NC}"
