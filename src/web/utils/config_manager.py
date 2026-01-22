@@ -47,7 +47,10 @@ class ConfigManager:
             "masked_key": self._mask_key(deepseek_key),
             "priority": 5,
             "description": "性价比最高,推荐使用",
-            "get_url": "https://platform.deepseek.com/"
+            "get_url": "https://platform.deepseek.com/",
+            # 新增配置
+            "enabled": os.getenv("DEEPSEEK_ENABLED", "true").lower() == "true",
+            "base_url": os.getenv("DEEPSEEK_BASE_URL", "https://api.deepseek.com")
         }
         
         # 通义千问
@@ -58,7 +61,9 @@ class ConfigManager:
             "masked_key": self._mask_key(dashscope_key),
             "priority": 4,
             "description": "国产稳定,可作为备用",
-            "get_url": "https://dashscope.aliyun.com/"
+            "get_url": "https://dashscope.aliyun.com/",
+            # 新增配置
+            "enabled": os.getenv("DASHSCOPE_ENABLED", "true").lower() == "true"
         }
         
         # OpenAI
@@ -96,6 +101,16 @@ class ConfigManager:
             "masked_key": self._mask_key(alpha_key),
             "description": "美股数据,免费5次/分钟",
             "get_url": "https://www.alphavantage.co/"
+        }
+        
+        # Serper (Google Search)
+        serper_key = os.getenv("SERPER_API_KEY")
+        sources["serper"] = {
+            "name": "Serper (Google)",
+            "configured": bool(serper_key),
+            "masked_key": self._mask_key(serper_key),
+            "description": "Google搜索API,用于实时信息检索",
+            "get_url": "https://serper.dev/"
         }
         
         return sources
@@ -334,9 +349,10 @@ class ConfigManager:
             others = {}
             
             for key, value in env_vars.items():
-                if key in ["DEEPSEEK_API_KEY", "DASHSCOPE_API_KEY", "OPENAI_API_KEY", "GOOGLE_API_KEY", "ANTHROPIC_API_KEY"]:
+                if key in ["DEEPSEEK_API_KEY", "DASHSCOPE_API_KEY", "OPENAI_API_KEY", "GOOGLE_API_KEY", "ANTHROPIC_API_KEY", 
+                          "DEEPSEEK_BASE_URL", "DEEPSEEK_ENABLED", "DASHSCOPE_ENABLED", "OPENAI_BASE_URL", "OPENAI_ENABLED"]:
                     ai_models[key] = value
-                elif key in ["FINNHUB_API_KEY", "ALPHA_VANTAGE_API_KEY"]:
+                elif key in ["FINNHUB_API_KEY", "ALPHA_VANTAGE_API_KEY", "SERPER_API_KEY"]:
                     data_sources[key] = value
                 elif key.startswith("MONGODB_") or key.startswith("REDIS_") or key == "USE_MONGODB_STORAGE":
                     databases[key] = value

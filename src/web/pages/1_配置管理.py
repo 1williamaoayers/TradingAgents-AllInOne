@@ -59,23 +59,58 @@ def render_config_management():
             
             # 编辑模式
             if st.session_state.get(f"editing_{key}", False):
+                # 1. 启用开关 (如果有配置)
+                new_enabled = None
+                if "enabled" in model:
+                    new_enabled = st.checkbox("启用此模型", value=model["enabled"], key=f"enable_{key}")
+                
+                # 2. Base URL (如果有配置)
+                new_base_url = None
+                if "base_url" in model:
+                    new_base_url = st.text_input(
+                        "API Base URL",
+                        value=model["base_url"],
+                        key=f"base_url_{key}",
+                        help="例如: https://api.deepseek.com"
+                    )
+
+                # 3. API Key
                 new_key = st.text_input(
-                    "新API密钥",
+                    "新API密钥 (留空则不修改)",
                     type="password",
                     key=f"new_key_{key}"
                 )
                 
                 col1, col2 = st.columns(2)
                 with col1:
-                    if st.button("保存", key=f"save_new_{key}"):
+                    if st.button("💾 保存", key=f"save_new_{key}"):
+                        success = True
+                        
+                        # 保存 Enabled
+                        if new_enabled is not None:
+                            env_key = f"{key.upper()}_ENABLED"
+                            res = config_manager.update_config(env_key, str(new_enabled).lower())
+                            if not res["success"]: success = False
+                        
+                        # 保存 Base URL
+                        if new_base_url is not None:
+                            env_key = f"{key.upper()}_BASE_URL"
+                            res = config_manager.update_config(env_key, new_base_url)
+                            if not res["success"]: success = False
+
+                        # 保存 API Key
                         if new_key:
                             env_key = f"{key.upper()}_API_KEY"
-                            result = config_manager.update_config(env_key, new_key)
-                            if result["success"]:
-                                st.success("✅ 已保存")
-                                st.session_state[f"editing_{key}"] = False
-                                time.sleep(0.5)
-                                st.rerun()
+                            res = config_manager.update_config(env_key, new_key)
+                            if not res["success"]: success = False
+                            
+                        if success:
+                            st.success("✅ 配置已保存")
+                            st.session_state[f"editing_{key}"] = False
+                            time.sleep(0.5)
+                            st.rerun()
+                        else:
+                            st.error("保存失败，请检查日志")
                 
                 with col2:
                     if st.button("取消", key=f"cancel_{key}"):

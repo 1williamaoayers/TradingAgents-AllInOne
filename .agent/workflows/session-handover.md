@@ -19,8 +19,9 @@ trigger_keywords: ["收工", "存档", "暂停", "下班"]
 - 添加关键警告（如果有）
 
 ### 步骤2：写入 notes.md
-在文件末尾追加 SESSION HANDOVER：
+**操作指南**: 请使用 **File Editing Tool** 在 `notes.md` 末尾追加。**严禁**使用 terminal 命令。
 
+**写入内容模板**:
 ```markdown
 ## SESSION HANDOVER - [当前时间]
 - **进度**: [用大白话描述当前进度]
