@@ -10,6 +10,18 @@ import requests
 import logging
 from datetime import datetime
 import re
+import asyncio
+from concurrent.futures import ThreadPoolExecutor
+
+# 尝试导入ScraperAdapter
+try:
+    from app.worker.news_adapters.scraper_adapter import ScraperAdapter
+except ImportError:
+    # 尝试备用路径
+    try:
+        from tradingagents.dataflows.interface import ScraperAdapter
+    except ImportError:
+        ScraperAdapter = None
 
 logger = logging.getLogger(__name__)
 
@@ -713,102 +725,209 @@ class UnifiedNewsAnalyzer:
             logger.error(traceback.format_exc())
             return False
 
-    def _get_a_share_news(self, stock_code: str, max_news: int, model_info: str = "") -> str:
-        """获取A股新闻"""
-        logger.info(f"[统一新闻工具] 获取A股 {stock_code} 新闻")
-
-        # 获取当前日期
-        curr_date = datetime.now().strftime("%Y-%m-%d")
-
-        # 优先级0: 从数据库获取新闻（最高优先级）
+    async def _fetch_from_scraper(self, stock_code: str, keyword: str = "") -> str:
+        """异步从Playwright爬虫获取新闻 (通用方法)"""
+        if not ScraperAdapter:
+            return ""
+            
         try:
-            logger.info(f"[统一新闻工具] 🔍 优先从数据库获取 {stock_code} 的新闻...")
-            # 获取公司名称用于内容匹配
-            company_name = self._get_company_name_from_code(stock_code)
-            db_news = self._get_news_from_database(stock_code, max_news, company_name)
+            logger.info(f"[统一新闻工具] 🕷️ 启动ScraperAdapter爬取 {stock_code} {keyword} ...")
+            adapter = ScraperAdapter()
+            # 优先使用关键词，否则使用代码
+            query = keyword if keyword else f"{stock_code} 股票 最新新闻"
+            
+            # 调用爬虫
+            results = await adapter.search(query)
+            
+            if results:
+                logger.info(f"[统一新闻工具] 🕷️ 爬虫返回 {len(results)} 条结果")
+                formatted = ""
+                for item in results[:5]: # 取前5条
+                     title = item.get('title', '无标题')
+                     link = item.get('url', '#')
+                     snippet = item.get('content', '')[:100]
+                     formatted += f"### {title}\n- **来源**: Playwright爬虫\n- **链接**: {link}\n- **摘要**: {snippet}...\n\n"
+                return formatted
+            return ""
+        except Exception as e:
+            logger.error(f"[统一新闻工具] 🕷️ 爬虫执行出错: {e}")
+            return ""
+
+    def _get_a_share_news(self, stock_code: str, max_news: int, model_info: str = "") -> str:
+        """获取A股新闻 - 🔥 并行融合策略"""
+        logger.info(f"[统一新闻工具] 🚀 获取A股 {stock_code} 新闻 (并行融合模式)")
+        
+        curr_date = datetime.now().strftime("%Y-%m-%d")
+        company_name = self._get_company_name_from_code(stock_code)
+        
+        all_content_parts = []
+        sources_used = []
+        
+        # ==================== 数据源1: 东方财富实时新闻 ====================
+        try:
+            if hasattr(self.toolkit, 'get_realtime_stock_news'):
+                logger.info(f"[统一新闻工具] 📰 [1/5] 尝试东方财富实时新闻...")
+                result = self.toolkit.get_realtime_stock_news.invoke({"ticker": stock_code, "curr_date": curr_date})
+                
+                if result and len(result.strip()) > 100:
+                    logger.info(f"[统一新闻工具] ✅ 东方财富新闻: {len(result)} 字符")
+                    all_content_parts.append(("东方财富实时新闻", result))
+                    sources_used.append("东方财富")
+        except Exception as e:
+            logger.warning(f"[统一新闻工具] ⚠️ 东方财富新闻获取失败: {e}")
+
+        # ==================== 数据源2: AKShare多源财经快讯 ====================
+        try:
+            logger.info(f"[统一新闻工具] 📡 [2/5] 从AKShare聚合多源快讯...")
+            from tradingagents.dataflows.providers.china.akshare import get_akshare_provider
+            provider = get_akshare_provider()
+            multi_news = provider.get_multi_source_news(limit_per_source=5)
+            if multi_news and len(multi_news) > 200:
+                logger.info(f"[统一新闻工具] ✅ AKShare多源快讯: {len(multi_news)} 字符")
+                all_content_parts.append(("AKShare多源快讯", multi_news))
+                sources_used.append("多源快讯")
+        except Exception as e:
+            logger.warning(f"[统一新闻工具] ⚠️ AKShare多源快讯获取失败: {e}")
+
+        # ==================== 数据源3: Google/Serper新闻 ====================
+        try:
+            logger.info(f"[统一新闻工具] 🔍 [3/5] 尝试Google/Serper新闻...")
+            query = f"{stock_code} 股票 新闻 财报"
+            
+            # 优先 Serper
+            serper_result = self._search_news_with_serper(query, period="qdr:w")
+            if serper_result and len(serper_result) > 50:
+                logger.info(f"[统一新闻工具] ✅ Serper新闻: {len(serper_result)} 字符")
+                all_content_parts.append(("Google/Serper新闻", serper_result))
+                sources_used.append("Google/Serper")
+            elif hasattr(self.toolkit, 'get_google_news'):
+                # 回退 Google 爬虫
+                result = self.toolkit.get_google_news.invoke({"query": query, "curr_date": curr_date})
+                if result and len(result.strip()) > 50:
+                    logger.info(f"[统一新闻工具] ✅ Google爬虫: {len(result)} 字符")
+                    all_content_parts.append(("Google新闻(爬虫)", result))
+                    sources_used.append("Google爬虫")
+        except Exception as e:
+            logger.warning(f"[统一新闻工具] Google/Serper获取失败: {e}")
+
+        # ==================== 数据源4: Playwright爬虫 ====================
+        try:
+            if ScraperAdapter:
+                logger.info(f"[统一新闻工具] 🕷️ [4/5] 调用 Playwright 爬虫获取深度新闻...")
+                
+                # 在新线程中运行异步任务
+                def run_scraper_cn():
+                    keyword = company_name if company_name else stock_code
+                    return asyncio.run(self._fetch_from_scraper(stock_code, keyword))
+                
+                with ThreadPoolExecutor(max_workers=1) as executor:
+                    future = executor.submit(run_scraper_cn)
+                    scraper_news = future.result(timeout=60) # 60秒超时
+                
+                if scraper_news:
+                    logger.info(f"[统一新闻工具] ✅ Playwright爬虫获取成功: {len(scraper_news)} 字符")
+                    all_content_parts.append(("Playwright爬虫", scraper_news))
+                    sources_used.append("Playwright爬虫")
+        except Exception as e:
+            logger.warning(f"[统一新闻工具] ⚠️ Playwright爬虫调用失败: {e}")
+
+        # ==================== 数据源5: yfinance新闻（港股/美股） ====================
+        try:
+            # 判断是否为港股或美股
+            is_hk_or_us = stock_code.endswith('.HK') or (len(stock_code) <= 5 and not stock_code.isdigit())
+            
+            if is_hk_or_us:
+                logger.info(f"[统一新闻工具] 📰 [5/6] 尝试yfinance新闻...")
+                import yfinance as yf
+                
+                ticker = yf.Ticker(stock_code)
+                news_list = ticker.news
+                
+                if news_list:
+                    yf_news_parts = []
+                    for i, n in enumerate(news_list[:10], 1):  # 最多10条
+                        content = n.get('content', {})
+                        title = content.get('title', '')
+                        summary = content.get('summary', '')[:200] if content.get('summary') else ''
+                        provider = content.get('provider', {}).get('displayName', '未知来源')
+                        pub_date = content.get('pubDate', '')[:10]
+                        
+                        yf_news_parts.append(f"### {i}. {title}")
+                        if summary:
+                            yf_news_parts.append(f"{summary}...")
+                        yf_news_parts.append(f"**来源**: {provider} | **时间**: {pub_date}\n")
+                    
+                    yf_news_str = "\n".join(yf_news_parts)
+                    logger.info(f"[统一新闻工具] ✅ yfinance新闻: {len(news_list)} 条")
+                    all_content_parts.append(("yfinance新闻", yf_news_str))
+                    sources_used.append("yfinance")
+        except Exception as e:
+            logger.warning(f"[统一新闻工具] ⚠️ yfinance新闻获取失败: {e}")
+
+        # ==================== 数据源6: 数据库缓存 ====================
+        try:
+            logger.info(f"[统一新闻工具] 📦 [6/6] 从数据库获取历史新闻...")
+            db_news = self._get_news_from_database(stock_code, 10, company_name)
             if db_news:
-                logger.info(f"[统一新闻工具] ✅ 数据库新闻获取成功: {len(db_news)} 字符")
-                return self._format_news_result(db_news, "数据库缓存", model_info)
-            else:
-                logger.info(f"[统一新闻工具] ⚠️ 数据库中没有 {stock_code} 的新闻，尝试同步...")
-
-                # 🔥 数据库没有数据时，调用同步服务同步新闻
-                try:
-                    logger.info(f"[统一新闻工具] 📡 调用同步服务同步 {stock_code} 的新闻...")
-                    synced_news = self._sync_news_from_akshare(stock_code, max_news)
-
-                    if synced_news:
-                        logger.info(f"[统一新闻工具] ✅ 同步成功，重新从数据库获取...")
-                        # 重新从数据库获取
-                        company_name = self._get_company_name_from_code(stock_code)
-                        db_news = self._get_news_from_database(stock_code, max_news, company_name)
-                        if db_news:
-                            logger.info(f"[统一新闻工具] ✅ 同步后数据库新闻获取成功: {len(db_news)} 字符")
-                            return self._format_news_result(db_news, "数据库缓存(新同步)", model_info)
-                    else:
-                        logger.warning(f"[统一新闻工具] ⚠️ 同步服务未返回新闻数据")
-
-                except Exception as sync_error:
-                    logger.warning(f"[统一新闻工具] ⚠️ 同步服务调用失败: {sync_error}")
-
-                logger.info(f"[统一新闻工具] ⚠️ 同步后仍无数据，尝试其他数据源...")
+                logger.info(f"[统一新闻工具] ✅ 数据库缓存: {len(db_news)} 字符")
+                all_content_parts.append(("数据库缓存", db_news))
+                sources_used.append("数据库")
         except Exception as e:
             logger.warning(f"[统一新闻工具] 数据库新闻获取失败: {e}")
 
-        # 优先级1: 东方财富实时新闻
-        try:
-            if hasattr(self.toolkit, 'get_realtime_stock_news'):
-                logger.info(f"[统一新闻工具] 尝试东方财富实时新闻...")
-                # 使用LangChain工具的正确调用方式：.invoke()方法和字典参数
-                result = self.toolkit.get_realtime_stock_news.invoke({"ticker": stock_code, "curr_date": curr_date})
+        # ==================== 融合所有数据源 ====================
+        if not all_content_parts:
+            logger.error(f"[统一新闻工具] ❌ A股所有数据源均失败！")
+            return "❌ 无法获取A股新闻数据，所有新闻源均不可用"
+
+        # 🔥 智能去重
+        deduplicator = NewsDeduplicator()
+        deduplicated_parts = []
+        total_before = 0
+        total_after = 0
+        
+        for source_name, content in all_content_parts:
+            lines = content.split('\n')
+            deduplicated_lines = []
+            for line in lines:
+                # 简单去重逻辑：提取标题行进行判断
+                title_to_check = ""
+                if line.strip().startswith('##') or line.strip().startswith('###'):
+                    title_to_check = re.sub(r'^#+\s*\d*\.\s*[📈📉➖📰📌📻]*\s*', '', line.strip())
+                elif '**' in line and line.strip().startswith('-'):
+                    match = re.search(r'\*\*(.+?)\*\*', line)
+                    if match:
+                        title_to_check = match.group(1)
                 
-                # 🔍 详细记录东方财富返回的内容
-                logger.info(f"[统一新闻工具] 📊 东方财富返回内容长度: {len(result) if result else 0} 字符")
-                logger.info(f"[统一新闻工具] 📋 东方财富返回内容预览 (前500字符): {result[:500] if result else 'None'}")
-                
-                if result and len(result.strip()) > 100:
-                    logger.info(f"[统一新闻工具] ✅ 东方财富新闻获取成功: {len(result)} 字符")
-                    return self._format_news_result(result, "东方财富实时新闻", model_info)
+                if title_to_check:
+                    total_before += 1
+                    if deduplicator.check_and_add(title_to_check, threshold=0.75):
+                        deduplicated_lines.append(line)
+                        total_after += 1
                 else:
-                    logger.warning(f"[统一新闻工具] ⚠️ 东方财富新闻内容过短或为空")
-        except Exception as e:
-            logger.warning(f"[统一新闻工具] 东方财富新闻获取失败: {e}")
-        
-        # 优先级2: Google新闻（优先使用Serper API，回退到普通爬虫）
-        try:
-            logger.info(f"[统一新闻工具] 尝试Google新闻 (Serper API)...")
-            query = f"{stock_code} 股票 新闻 财报"
+                    deduplicated_lines.append(line)
             
-            # 1. 尝试使用 Serper API
-            serper_result = self._search_news_with_serper(query, period="qdr:w")
-            if serper_result and len(serper_result) > 50:
-                logger.info(f"[统一新闻工具] ✅ Serper新闻获取成功: {len(serper_result)} 字符")
-                return self._format_news_result(serper_result, "Google/Serper新闻", model_info)
-            
-            # 2. 回退到普通爬虫
-            if hasattr(self.toolkit, 'get_google_news'):
-                logger.info(f"[统一新闻工具] Serper无结果，尝试Google新闻爬虫...")
-                # 使用LangChain工具的正确调用方式：.invoke()方法和字典参数
-                result = self.toolkit.get_google_news.invoke({"query": query, "curr_date": curr_date})
-                if result and len(result.strip()) > 50:
-                    logger.info(f"[统一新闻工具] ✅ Google新闻爬虫获取成功: {len(result)} 字符")
-                    return self._format_news_result(result, "Google新闻(爬虫)", model_info)
-        except Exception as e:
-            logger.warning(f"[统一新闻工具] Google新闻获取失败: {e}")
+            deduplicated_content = '\n'.join(deduplicated_lines)
+            if deduplicated_content.strip():
+                deduplicated_parts.append((source_name, deduplicated_content))
+                
+        # 构建融合报告
+        total_chars = sum(len(content) for _, content in deduplicated_parts)
+        duplicates_removed = total_before - total_after
         
-        # 优先级3: OpenAI全球新闻
-        try:
-            if hasattr(self.toolkit, 'get_global_news_openai'):
-                logger.info(f"[统一新闻工具] 尝试OpenAI全球新闻...")
-                # 使用LangChain工具的正确调用方式：.invoke()方法和字典参数
-                result = self.toolkit.get_global_news_openai.invoke({"curr_date": curr_date})
-                if result and len(result.strip()) > 50:
-                    logger.info(f"[统一新闻工具] ✅ OpenAI新闻获取成功: {len(result)} 字符")
-                    return self._format_news_result(result, "OpenAI全球新闻", model_info)
-        except Exception as e:
-            logger.warning(f"[统一新闻工具] OpenAI新闻获取失败: {e}")
+        report = f"# {stock_code} 综合新闻报告 (A股多源融合)\n\n"
+        report += f"📅 生成时间: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n"
+        report += f"📊 数据来源: {', '.join(sources_used)} ({len(sources_used)}个)\n"
+        report += f"📏 总数据量: {total_chars} 字符\n"
+        if duplicates_removed > 0:
+            report += f"🔄 去重统计: {duplicates_removed} 条重复已移除\n"
+        report += "\n---\n\n"
         
-        return "❌ 无法获取A股新闻数据，所有新闻源均不可用"
+        for source_name, content in deduplicated_parts:
+            report += f"\n## 📌 来源: {source_name}\n\n{content}\n\n---\n"
+        
+        logger.info(f"[统一新闻工具] 🎉 A股融合完成: {len(sources_used)}个数据源, {len(report)} 字符")
+        return self._format_news_result(report, f"A股多源融合({','.join(sources_used)})", model_info)
     
     def _get_hk_share_news(self, stock_code: str, max_news: int, model_info: str = "") -> str:
         """
@@ -852,51 +971,25 @@ class UnifiedNewsAnalyzer:
         except Exception as e:
             logger.warning(f"[统一新闻工具] ⚠️ 东方财富获取失败: {e}")
         
-        # ==================== 数据源7: Playwright爬虫 (补全缺失代码) ====================
+        # ==================== 数据源7: Playwright爬虫 ====================
         try:
-            logger.info(f"[统一新闻工具] 🕷️ [7/7] 调用 Playwright 爬虫获取深度新闻...")
-            # 动态导入防止循环引用
-            from app.worker.news_adapters.scraper_adapter import ScraperAdapter
-            import asyncio
-            
-            # 使用现有的 loop 或者创建新的
-            try:
-                loop = asyncio.get_event_loop()
-            except RuntimeError:
-                loop = asyncio.new_event_loop()
-                asyncio.set_event_loop(loop)
+            if ScraperAdapter:
+                logger.info(f"[统一新闻工具] 🕷️ [7/7] 调用 Playwright 爬虫获取深度新闻...")
                 
-            # 初始化适配器 (API地址由环境变量或默认值处理)
-            adapter = ScraperAdapter()
-            
-            # 使用公司名作为关键词 (比代码更准确)
-            search_keyword = company_name if company_name else stock_code
-            logger.info(f"[统一新闻工具] 🕷️ 爬虫关键词: {search_keyword}")
-            
-            # 异步调用获取新闻
-            if not loop.is_running():
-                scraper_news = loop.run_until_complete(adapter.get_news(search_keyword, limit=10))
-            else:
-                import nest_asyncio
-                nest_asyncio.apply()
-                scraper_news = loop.run_until_complete(adapter.get_news(search_keyword, limit=10))
+                # 在新线程中运行异步任务
+                def run_scraper():
+                    # 优先使用公司名搜索
+                    keyword = company_name if company_name else stock_code
+                    return asyncio.run(self._fetch_from_scraper(stock_code, keyword))
                 
-            if scraper_news:
-                scraper_content = f"=== 🕷️ Playwright爬虫新闻 ({search_keyword}) ===\n\n"
+                with ThreadPoolExecutor(max_workers=1) as executor:
+                    future = executor.submit(run_scraper)
+                    scraper_news = future.result(timeout=60) # 60秒超时
                 
-                for news in scraper_news:
-                    title = news.get('title', '')
-                    source = news.get('source', 'Scraper')
-                    summary = news.get('summary', '')[:200]
-                    url = news.get('url', '')
-                    scraper_content += f"### {title}\n- **来源**: {source}\n- **摘要**: {summary}\n- **链接**: {url}\n\n"
-                    
-                logger.info(f"[统一新闻工具] ✅ Playwright爬虫: {len(scraper_news)}条, {len(scraper_content)} 字符")
-                all_content_parts.append(("Playwright爬虫", scraper_content))
-                sources_used.append("Playwright爬虫")
-            else:
-                 logger.info(f"[统一新闻工具] 🕷️ Playwright爬虫未返回数据")
-                 
+                if scraper_news:
+                    logger.info(f"[统一新闻工具] ✅ Playwright爬虫获取成功: {len(scraper_news)} 字符")
+                    all_content_parts.append(("Playwright爬虫", scraper_news))
+                    sources_used.append("Playwright爬虫")
         except Exception as e:
             logger.warning(f"[统一新闻工具] ⚠️ Playwright爬虫调用失败: {e}")
 
@@ -945,9 +1038,37 @@ class UnifiedNewsAnalyzer:
             except Exception as e:
                 logger.warning(f"[统一新闻工具] ⚠️ Alpha Vantage获取失败: {e}")
         
-        # ==================== 数据源5: RSS新闻源 ====================
+        # ==================== 数据源5: yfinance新闻（港股专用） ====================
         try:
-            logger.info(f"[统一新闻工具] 📡 [5/6] 从RSS源获取新闻...")
+            logger.info(f"[统一新闻工具] 📰 [5/7] 尝试yfinance新闻...")
+            import yfinance as yf
+            
+            ticker = yf.Ticker(stock_code)
+            news_list = ticker.news
+            
+            if news_list:
+                yf_news_content = "=== 📰 yfinance新闻 ===\n\n"
+                for i, n in enumerate(news_list[:10], 1):
+                    content = n.get('content', {})
+                    title = content.get('title', '')
+                    summary = content.get('summary', '')[:200] if content.get('summary') else ''
+                    provider = content.get('provider', {}).get('displayName', '未知来源')
+                    pub_date = content.get('pubDate', '')[:10]
+                    
+                    yf_news_content += f"### {i}. {title}\n"
+                    if summary:
+                        yf_news_content += f"{summary}...\n"
+                    yf_news_content += f"**来源**: {provider} | **时间**: {pub_date}\n\n"
+                
+                logger.info(f"[统一新闻工具] ✅ yfinance新闻: {len(news_list)} 条")
+                all_content_parts.append(("yfinance新闻", yf_news_content))
+                sources_used.append("yfinance")
+        except Exception as e:
+            logger.warning(f"[统一新闻工具] ⚠️ yfinance新闻获取失败: {e}")
+
+        # ==================== 数据源6: RSS新闻源 ====================
+        try:
+            logger.info(f"[统一新闻工具] 📡 [6/7] 从RSS源获取新闻...")
             from app.worker.news_adapters.rss_adapter import RSSAdapter
             import asyncio
             
@@ -984,9 +1105,9 @@ class UnifiedNewsAnalyzer:
         except Exception as e:
             logger.warning(f"[统一新闻工具] ⚠️ RSS新闻获取失败: {e}")
         
-        # ==================== 数据源6: 数据库缓存（补充历史新闻）====================
+        # ==================== 数据源7: 数据库缓存（补充历史新闻）====================
         try:
-            logger.info(f"[统一新闻工具] 📦 [6/6] 从数据库获取历史新闻...")
+            logger.info(f"[统一新闻工具] 📦 [7/7] 从数据库获取历史新闻...")
             db_news = self._get_news_from_database(stock_code, 15, company_name)  # 取15条
             if db_news and len(db_news) > 100:
                 logger.info(f"[统一新闻工具] ✅ 数据库缓存: {len(db_news)} 字符")
@@ -1483,7 +1604,7 @@ class UnifiedNewsAnalyzer:
         
         # ==================== 数据源4: 数据库缓存 ====================
         try:
-            logger.info(f"[统一新闻工具] 📦 [4/4] 从数据库获取历史新闻...")
+            logger.info(f"[统一新闻工具] 📦 [4/5] 从数据库获取历史新闻...")
             db_news = self._get_news_from_database(stock_code, 10, stock_code)
             if db_news and len(db_news) > 100:
                 logger.info(f"[统一新闻工具] ✅ 数据库缓存: {len(db_news)} 字符")
@@ -1491,6 +1612,26 @@ class UnifiedNewsAnalyzer:
                 sources_used.append("数据库历史")
         except Exception as e:
             logger.warning(f"[统一新闻工具] ⚠️ 数据库获取失败: {e}")
+
+        # ==================== 数据源5: Playwright爬虫 ====================
+        try:
+            if ScraperAdapter:
+                logger.info(f"[统一新闻工具] 🕷️ [5/5] 调用 Playwright 爬虫获取深度新闻...")
+                
+                # 在新线程中运行异步任务
+                def run_scraper_us():
+                    return asyncio.run(self._fetch_from_scraper(stock_code, stock_code))
+                
+                with ThreadPoolExecutor(max_workers=1) as executor:
+                    future = executor.submit(run_scraper_us)
+                    scraper_news = future.result(timeout=60) # 60秒超时
+                
+                if scraper_news:
+                    logger.info(f"[统一新闻工具] ✅ Playwright爬虫获取成功: {len(scraper_news)} 字符")
+                    all_content_parts.append(("Playwright爬虫", scraper_news))
+                    sources_used.append("Playwright爬虫")
+        except Exception as e:
+            logger.warning(f"[统一新闻工具] ⚠️ Playwright爬虫调用失败: {e}")
         
         # ==================== 融合所有数据源 ====================
         if not all_content_parts:
