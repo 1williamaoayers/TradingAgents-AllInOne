@@ -1046,7 +1046,14 @@ class UnifiedNewsAnalyzer:
             ticker = yf.Ticker(stock_code)
             news_list = ticker.news
             
+            # 🔍 调试日志：记录返回值详情
+            logger.info(f"[yfinance调试] 返回类型: {type(news_list)}")
+            logger.info(f"[yfinance调试] 返回值: {news_list}")
+            logger.info(f"[yfinance调试] 是否为空: {not news_list}")
+            logger.info(f"[yfinance调试] 长度: {len(news_list) if news_list else 0}")
+            
             if news_list:
+                logger.info(f"[yfinance调试] ✓ 条件通过，开始处理数据...")
                 yf_news_content = "=== 📰 yfinance新闻 ===\n\n"
                 for i, n in enumerate(news_list[:10], 1):
                     content = n.get('content', {})
@@ -1060,11 +1067,16 @@ class UnifiedNewsAnalyzer:
                         yf_news_content += f"{summary}...\n"
                     yf_news_content += f"**来源**: {provider} | **时间**: {pub_date}\n\n"
                 
-                logger.info(f"[统一新闻工具] ✅ yfinance新闻: {len(news_list)} 条")
+                logger.info(f"[yfinance调试] 准备添加到all_content_parts，当前长度: {len(all_content_parts)}")
                 all_content_parts.append(("yfinance新闻", yf_news_content))
+                logger.info(f"[yfinance调试] 已添加，新长度: {len(all_content_parts)}")
                 sources_used.append("yfinance")
+                logger.info(f"[统一新闻工具] ✅ yfinance新闻: {len(news_list)} 条")
+            else:
+                logger.warning(f"[yfinance调试] ✗ 条件未通过，news_list为空或False")
         except Exception as e:
             logger.warning(f"[统一新闻工具] ⚠️ yfinance新闻获取失败: {e}")
+            logger.exception(f"[yfinance调试] 完整异常信息:")
 
         # ==================== 数据源6: RSS新闻源 ====================
         try:

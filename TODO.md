@@ -1,20 +1,28 @@
-<!-- SYSTEM: STOP AND READ -->
-<!-- 🛑 停止！在做任何事情之前，必须先运行 `view_file .agent/workflows/start.md` -->
-<!-- 🛑 STOP! Run `view_file .agent/workflows/start.md` BEFORE doing anything else. -->
+# 当前任务
 
-# TODO
+## TASK 1: yfinance新闻数据源调试 🔍
+- **状态**: 进行中
+- **已知事实**:
+  - ✅ yfinance手动测试可用（返回10条新闻）
+  - ✅ yfinance在容器中被调用（日志显示`[5/7] 尝试yfinance新闻...`）
+  - ❌ 最终结果只有4个数据源，缺少yfinance
+  - ❌ 没有`✅ yfinance新闻: X条`的成功日志
+  - ❌ 没有异常或错误日志
+- **待查明的4个问题**:
+  1. `ticker.news`在容器中返回了什么？（空列表？None？异常？）
+  2. `if news_list:`条件是否通过？
+  3. 如果通过，为什么没有成功日志？
+  4. 如果通过，为什么数据没有添加到`all_content_parts`？
+- **执行计划**:
+  1. 在第1048-1068行添加详细调试日志（记录返回值类型、长度、内容）
+  2. 重新构建dev镜像
+  3. 运行01810分析
+  4. 查看完整日志找出真实原因
+  5. 根据实际问题修复代码
+  6. 再次验证直到成功
+- **成功标准**: 日志显示`✅ yfinance新闻: X条`且最终结果包含yfinance数据
 
-## ⚠️ 永久警告 (Permanent Warnings)
-- [!] 🔴 **语言锁**: 输出前必须问 "这是中文吗？"
-- [!] 🛑 **开工锁**: 必须先运行 `view_file default_api:view_file .agent/workflows/start.md`
-- [!] 🛡️ **工具锁**: 禁止终端写入，必须用 File Edit Tools。
-
-## 当前任务
-- [x] [P0] 修复 GitHub Action 警告 (input 'dockerfile' deprecated)
-- [x] [P0] 修复 Git 环境并提交代码 (Init & Push)
-- [x] [P0] 验证 GitHub Action 修复结果 (Monitor)
-- [x] [P0] 修复规则体系 (Anti-Freeze & Terminal Safety)
-
-## 已完成
-- [x] Project Exploration: 了解项目结构 (2026-01-22)
-- [x] Verification: 检查 GitHub 镜像构建状态 (Run 21237752323 Success)
+## TASK 2: 更新规则系统 ✅
+- **状态**: 已完成
+- **内容**: 在`.agent/workflows/rule.md`添加"检查3.5：未经验证推理禁令"
+- **效果**: 防止agent未经验证就推测原因或报告完成
