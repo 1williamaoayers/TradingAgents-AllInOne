@@ -207,16 +207,17 @@ class HKStockProvider:
 
     def _normalize_hk_symbol(self, symbol: str) -> str:
         """
-        标准化港股代码格式
+        标准化港股代码格式（yfinance专用）
 
-        Yahoo Finance 期望的格式：0700.HK（4位数字）
-        输入可能的格式：00700, 700, 0700, 0700.HK, 00700.HK
+        🔧 修复：yfinance不识别前导0，需要去除
+        - 输入：01810.HK, 01810, 1810 等
+        - 输出：1810.HK（去除前导0）
 
         Args:
             symbol: 原始港股代码
 
         Returns:
-            str: 标准化后的港股代码（格式：0700.HK）
+            str: 标准化后的港股代码（格式：1810.HK，无前导0）
         """
         if not symbol:
             return symbol
@@ -227,12 +228,10 @@ class HKStockProvider:
         if symbol.endswith('.HK'):
             symbol = symbol[:-3]
 
-        # 如果是纯数字，标准化为4位数字
+        # 如果是纯数字，去除前导0（yfinance不识别前导0）
         if symbol.isdigit():
-            # 移除前导0，然后补齐到4位
             clean_code = symbol.lstrip('0') or '0'  # 如果全是0，保留一个0
-            normalized_code = clean_code.zfill(4)
-            return f"{normalized_code}.HK"
+            return f"{clean_code}.HK"
 
         return symbol
 

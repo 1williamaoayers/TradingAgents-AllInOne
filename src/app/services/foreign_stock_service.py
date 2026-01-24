@@ -1616,7 +1616,9 @@ class ForeignStockService:
         """从Yahoo Finance获取港股基础信息"""
         import yfinance as yf
 
-        ticker = yf.Ticker(f"{code}.HK")
+        # 🔧 修复：去除前导0（yfinance不识别01810.HK，需要1810.HK）
+        yf_code = code.lstrip('0') or '0' if code.isdigit() else code
+        ticker = yf.Ticker(f"{yf_code}.HK")
         info = ticker.info
 
         return {
@@ -1705,7 +1707,9 @@ class ForeignStockService:
         import yfinance as yf
         import pandas as pd
 
-        ticker = yf.Ticker(f"{code}.HK")
+        # 🔧 修复：去除前导0（yfinance不识别01810.HK，需要1810.HK）
+        yf_code = code.lstrip('0') or '0' if code.isdigit() else code
+        ticker = yf.Ticker(f"{yf_code}.HK")
 
         # 周期映射
         period_map = {
