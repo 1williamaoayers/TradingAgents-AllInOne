@@ -1043,7 +1043,15 @@ class UnifiedNewsAnalyzer:
             logger.info(f"[统一新闻工具] 📰 [5/7] 尝试yfinance新闻...")
             import yfinance as yf
             
-            ticker = yf.Ticker(stock_code)
+            # 🔧 修复：港股代码去除前导0（01810.HK → 1810.HK）
+            yf_code = stock_code
+            if '.HK' in stock_code.upper():
+                code_part = stock_code.upper().replace('.HK', '')
+                code_part = code_part.lstrip('0') or '0'  # 去除前导0，但保留单个0
+                yf_code = f"{code_part}.HK"
+                logger.info(f"[统一新闻工具] 🔧 港股代码转换: {stock_code} → {yf_code}")
+            
+            ticker = yf.Ticker(yf_code)
             news_list = ticker.news
             
             # 🔍 调试日志：记录返回值详情
