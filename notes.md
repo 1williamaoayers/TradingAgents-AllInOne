@@ -360,6 +360,14 @@
 - **Content**: Includes `git clone -b dev`, `cp .env`, `chmod`, `mv`, and `docker-compose`.
 - **Status**: Committed and Pushed to `dev` branch.
 
+## 2026-01-24 Data Sync Fix (HK Stocks)
+- **Problem**: HK stocks (e.g. 01810) showed no name because auto-sync was A-share only.
+- **Action 1**: Manually triggered `fetch_hk_stocks.py` in container.
+- **Action 2**: Modified `docker-init.sh` to auto-run HK sync on startup.
+- **Action 3**: Improved `3_自选股管理.py` to fallback to `stock_basic_info` (A-share) if `stock_names_cache` (HK) misses.
+- **Status**: Committed and Pushed to `dev` branch.
+
+
 
 
 
