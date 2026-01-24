@@ -79,3 +79,24 @@ docker-compose up -d
 docker-compose pull
 docker-compose up -d
 ```
+
+***
+
+### 🛠️ 备用方案（手动 SSH 修复）
+如果 `start.sh` 无法运行，请直接复制粘贴以下命令（解决权限与启动问题）：
+
+```bash
+# 1. 进入项目目录
+cd /home/TradingAgents-AllInOne
+
+# 2. 拉取最新代码
+git pull
+
+# 3. 暴力修复权限 (小白专用，解决 Permission denied)
+chmod 666 .env
+mkdir -p config
+chmod -R 777 config
+
+# 4. 启动服务
+docker-compose up -d
+```

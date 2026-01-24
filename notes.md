@@ -342,4 +342,11 @@
 - **Status**: Committed and Pushed to `dev` branch.
 - **Instruction**: User needs to `git pull` and `docker-compose up -d`.
 
+## 2026-01-24 Permission Fix (start.sh)
+- **Problem**: `[Errno 13] Permission denied: '.env'` in Docker container.
+- **Action**: Modified `start.sh` to auto-execute `chmod 666 .env` and `chmod -R 777 config/`.
+- **Reason**: Container user (appuser 1000) needs write access to host-mounted files for config sync.
+- **Status**: Committed and Pushed to `dev` branch.
+
+
 
