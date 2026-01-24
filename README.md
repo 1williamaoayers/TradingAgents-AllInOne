@@ -21,6 +21,10 @@
 ### 1. 下载本仓库
 ```bash
 git clone -b dev https://github.com/1williamaoayers/TradingAgents-AllInOne.git
+
+# (可选) 如果网络不佳，可临时指定代理 (将 127.0.0.1:7890 替换为您的实际代理地址)
+# git clone -b dev -c http.proxy=http://127.0.0.1:7890 https://github.com/1williamaoayers/TradingAgents-AllInOne.git
+
 cd TradingAgents-AllInOne
 ```
 
