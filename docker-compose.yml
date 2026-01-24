@@ -85,9 +85,6 @@ services:
       - ta_data:/app/data
       - ta_logs:/app/logs
       - ./.env:/app/.env
-      # 🔥 [核心优化] 挂载源码到容器，实现热更新
-      # 这样修改代码后重启容器即可生效，无需重新构建镜像
-      - ./src:/app
     env_file:
       - .env
     environment:

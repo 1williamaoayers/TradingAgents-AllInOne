@@ -367,6 +367,13 @@
 - **Action 3**: Improved `3_自选股管理.py` to fallback to `stock_basic_info` (A-share) if `stock_names_cache` (HK) misses.
 - **Status**: Committed and Pushed to `dev` branch.
 
+## 2026-01-24 Deploy Opt (Hot Reload)
+- **Problem**: Code changes (e.g., `docker-init.sh`) require image rebuild to take effect.
+- **Action**: Modified `docker-compose.yml` to mount `./src:/app`.
+- **Result**: "Hot Reload" enabled. `git pull` + `docker-compose restart` is enough. No rebuild needed.
+- **Status**: Committed and Pushed to `dev` branch.
+
+
 
 
 
