@@ -20,7 +20,7 @@
 
 ### 1. 下载本仓库
 ```bash
-git clone https://github.com/1williamaoayers/TradingAgents-AllInOne.git
+git clone -b dev https://github.com/1williamaoayers/TradingAgents-AllInOne.git
 cd TradingAgents-AllInOne
 ```
 

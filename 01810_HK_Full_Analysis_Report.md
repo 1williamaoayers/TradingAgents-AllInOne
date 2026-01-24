@@ -136,7 +136,7 @@ This document contains the raw output of the analysis reports generated during t
 **总结**：小米集团基本面稳健，业绩持续增长，当前估值处于合理区间。考虑到公司积极的回购计划和良好的成长性，建议**持有**现有仓位，新投资者可逢低分批建仓。
 ```
 
-## 2. Social Sentiment Report (社交/情绪分析报告)
+## 2. social Sentiment Report (社交/情绪分析报告)
 **Source**: `Serper` (Google Search)
 **File**: `results/01810.HK/2026-01-24/reports/sentiment_report.md`
 **Key Finding**: Neutral sentiment (0.5), heavy debate between "Buyback" and "Price Drop"
