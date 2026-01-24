@@ -335,4 +335,11 @@
 - **Status**: Committed and Pushed to `dev` branch.
 - **Commit**: `docs: add git clone proxy example to README`
 
+## 2026-01-24 Deployment Conflict Fix (Port 8000)
+- **Problem**: User reported `Bind for 0.0.0.0:8000 failed` during deployment. Host port 8000 is occupied.
+- **Action**: Modified `docker-compose.yml` to remove port 8000 mapping (API stays internal). Streamlit (8501) unaffected.
+- **Change**: `ports: ["8501:8501"]` only.
+- **Status**: Committed and Pushed to `dev` branch.
+- **Instruction**: User needs to `git pull` and `docker-compose up -d`.
+
 

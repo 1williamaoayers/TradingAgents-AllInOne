@@ -27,6 +27,19 @@ else
     echo -e "${GREEN}[INFO] 检测到现有 .env 配置文件，将直接使用。${NC}"
 fi
 
+# 修复权限问题 (Docker 容器内非 root 用户需要写入权限)
+echo -e "${YELLOW}[INFO] 正在调整文件权限以支持 Docker 容器写入...${NC}"
+if [ -f .env ]; then
+    chmod 666 .env
+fi
+
+if [ -d config ]; then
+    chmod -R 777 config
+else
+    mkdir -p config
+    chmod -R 777 config
+fi
+
 # 拉取镜像
 echo -e "${YELLOW}[INFO] 正在拉取最新镜像...${NC}"
 docker-compose pull
