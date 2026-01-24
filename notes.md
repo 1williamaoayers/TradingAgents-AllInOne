@@ -317,3 +317,22 @@
 -   **下一步**: 观察明日早报数据是否包含 yfinance 来源。
 -   **文档更新**: `TODO.md` (Task 16 OK), `walkthrough.md` (Updated).
 
+## 2026-01-24 Code Push Verification
+- **Status**: Checked `git status` (Clean) and `git push` (Up-to-date).
+- **Commit**: `d634751` (feat(scheduler): implement yfinance...) matches Task 16.
+- **Result**: Remote `dev` branch is up to date. Deployment consistency confirmed.
+
+### Rule Watchdog Report
+- **Language Lock**: All output in Chinese. Task UI verified.
+- **Dual Memory**: `TODO.md` aligned with `notes.md`.
+- **Evidence**: `git log` hash `d634751` confirms code sync.
+- **Tool Safety**: No unsafe write commands used.
+- **Conclusion**: System healthy, rules followed.
+
+## 2026-01-24 Documentation Update (Proxy Instruction)
+- **Goal**: Add git proxy example to README.md upon user request.
+- **Change**: Added `-c http.proxy=...` example in README.md.
+- **Status**: Committed and Pushed to `dev` branch.
+- **Commit**: `docs: add git clone proxy example to README`
+
+

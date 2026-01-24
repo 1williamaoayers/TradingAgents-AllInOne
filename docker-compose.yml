@@ -79,7 +79,7 @@ services:
     container_name: ta-app
     restart: unless-stopped
     ports:
-      - "8000:8000"
+      # - "8000:8000" # 避免端口冲突，仅暴露 Web UI
       - "8501:8501"
     volumes:
       - ta_data:/app/data

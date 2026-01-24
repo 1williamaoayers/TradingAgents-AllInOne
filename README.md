@@ -66,7 +66,7 @@ docker-compose up -d
 | 服务 | 容器名 | 端口 | 说明 |
 |------|--------|------|------|
 | **App** | `ta-app` | 8501 | Streamlit Web 界面 |
-| **API** | `ta-app` | 8000 | FastAPI 后端 |
+| **API** | `ta-app` | 8000 | FastAPI 后端 (容器内部) |
 | **Scraper** | `ta-scraper` | 9527 | PlaywriteOCR 爬虫 API |
 | **DB** | `ta-mongodb` | 27017 | MongoDB 数据库 |
 | **Cache** | `ta-redis` | 6379 | Redis 缓存 |
