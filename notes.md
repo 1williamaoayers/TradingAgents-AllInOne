@@ -354,6 +354,13 @@
 - **Content**: Includes `cd`, `git pull`, `chmod` (for .env/config), and `docker-compose up -d`.
 - **Status**: Committed and Pushed to `dev` branch.
 
+## 2026-01-24 Docs Update (Zero-to-Hero Guide)
+- **Problem**: User needed a "from scratch" deployment guide, previous one assumed existing repo.
+- **Action**: Added "Fresh Install (Copy-Paste Version)" section to `README.md`.
+- **Content**: Includes `git clone -b dev`, `cp .env`, `chmod`, `mv`, and `docker-compose`.
+- **Status**: Committed and Pushed to `dev` branch.
+
+
 
 
 

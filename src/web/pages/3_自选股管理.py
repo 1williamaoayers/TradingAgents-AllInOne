@@ -133,7 +133,14 @@ def add_stock_to_db(symbol, market):
                 stock_name = cache.get('name', symbol)
                 print(f"[DEBUG] 从缓存获取: {symbol} -> {stock_name}")
             else:
-                print(f"[DEBUG] 缓存未找到，使用代码: {symbol}")
+                # 🔥 [增强] 缓存未找到，尝试查询 A 股基础信息表 (stock_basic_info)
+                # 这能解决 A 股未在 stock_names_cache (仅港股) 中的问题
+                basic = db.stock_basic_info.find_one({'code': clean_symbol})
+                if basic:
+                    stock_name = basic.get('name', symbol)
+                    print(f"[DEBUG] 从基础信息获取: {symbol} -> {stock_name}")
+                else:
+                    print(f"[DEBUG] 缓存和基础表均未找到，使用代码: {symbol}")
         except Exception as e:
             print(f"[WARNING] 缓存查询失败: {e}")
         
