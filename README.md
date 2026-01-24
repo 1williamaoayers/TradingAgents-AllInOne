@@ -82,7 +82,38 @@ docker-compose up -d
 
 ***
 
-### 🛠️ 备用方案（手动 SSH 修复）
+
+### 🚀 从零开始部署 (小白一键粘贴版)
+如果您是第一次部署，请直接复制下面整段命令（包含下载、配置、修复权限、启动）：
+
+```bash
+# 0. 准备工作 (确保安装了 git 和 docker)
+# sudo apt update && sudo apt install -y git
+
+# 1. 下载项目 (默认使用 dev 开发分支)
+git clone -b dev https://github.com/1williamaoayers/TradingAgents-AllInOne.git
+
+# 2. 进入目录
+cd TradingAgents-AllInOne
+
+# 3. 初始化配置
+if [ ! -f .env ]; then
+    cp .env.example .env
+    echo "配置文件 .env 已创建"
+fi
+
+# 4. 暴力修复权限 (关键！解决 Permission denied)
+chmod 666 .env
+mkdir -p config
+chmod -R 777 config
+
+# 5. 启动服务
+docker-compose up -d
+```
+
+***
+
+### 🛠️ 备用方案（手动 SSH 修复 - 针对已存在项目）
 如果 `start.sh` 无法运行，请直接复制粘贴以下命令（解决权限与启动问题）：
 
 ```bash

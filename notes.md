@@ -348,5 +348,12 @@
 - **Reason**: Container user (appuser 1000) needs write access to host-mounted files for config sync.
 - **Status**: Committed and Pushed to `dev` branch.
 
+## 2026-01-24 Docs Update (Manual Fix)
+- **Problem**: User requested a manual, copy-paste SSH command alternative to `start.sh`.
+- **Action**: Added "Backup Solution (Manual SSH Fix)" section to `README.md`.
+- **Content**: Includes `cd`, `git pull`, `chmod` (for .env/config), and `docker-compose up -d`.
+- **Status**: Committed and Pushed to `dev` branch.
+
+
 
 
