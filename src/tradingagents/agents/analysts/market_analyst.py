@@ -185,7 +185,14 @@ def create_market_analyst(llm, toolkit):
                     "- 确保在分析中正确使用公司名称\"{company_name}\"和股票代码\"{ticker}\"\n"
                     "- 不要在标题中使用\"技术分析报告\"等自创标题\n"
                     "- 如果你有明确的技术面投资建议（买入/持有/卖出），请在投资建议部分明确标注\n"
+                    "- 如果你有明确的技术面投资建议（买入/持有/卖出），请在投资建议部分明确标注\n"
                     "- 不要使用'最终交易建议'前缀，因为最终决策需要综合所有分析师的意见\n"
+                    "\n"
+                    "🏁 **报告脚注要求（必须包含）：**\n"
+                    "在报告的最后，必须添加以下标准脚注（请替换[]内容）：\n"
+                    "---\n"
+                    "*数据来源：[AKShare/yfinance或其他实际使用的数据源名称]（截至{current_date}）*\n"
+                    "*报告生成时间：{current_date}*\n"
                     "\n"
                     "请使用中文，基于真实数据进行分析。",
                 ),
@@ -464,7 +471,12 @@ def create_market_analyst(llm, toolkit):
 - 提供明确的投资建议和风险提示
 - 报告长度不少于800字
 - 使用中文撰写
-- 使用表格展示数据时，确保格式规范"""
+- 使用表格展示数据时，确保格式规范
+🏁 **报告脚注要求（必须包含）：**
+在报告的最后，必须添加以下标准脚注：
+---
+*数据来源：Tushare/AKShare（截至{current_date}）*
+*报告生成时间：{current_date}*"""
 
                     # 构建完整的消息序列
                     messages = state["messages"] + [result] + tool_messages + [HumanMessage(content=analysis_prompt)]

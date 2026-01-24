@@ -1,0 +1,13 @@
+{
+  "enabled": true,
+  "name": "禁止要求用户手动执行",
+  "description": "检测Agent是否要求用户手动执行命令、查看页面或验证结果，如发现立即纠正。Agent必须自己使用工具（gh、docker、webFetch、MCP Playwright）完成所有操作。",
+  "version": "1",
+  "when": {
+    "type": "agentStop"
+  },
+  "then": {
+    "type": "askAgent",
+    "prompt": "检查刚才的回复中是否包含以下违规内容：1) '你现在可以去XXX查看' 2) '请手动执行XXX' 3) '你可以运行XXX验证' 4) '请访问XXX页面' 5) '请手动XXX'。如发现违规，立即说明并使用正确工具（gh命令、docker命令、webFetch、MCP Playwright）自己完成操作。记住：你有GitHub CLI、MCP Playwright、Docker Desktop等强大工具，必须自己执行而不是让用户手动操作！"
+  }
+}

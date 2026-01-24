@@ -88,6 +88,7 @@ from app.worker.baostock_sync_service import (
     run_baostock_historical_sync,
     run_baostock_status_check
 )
+from app.worker.yfinance_news_sync_service import run_yfinance_news_sync
 # 港股和美股改为按需获取+缓存模式，不再需要定时同步任务
 # from app.worker.hk_sync_service import ...
 # from app.worker.us_sync_service import ...
@@ -609,6 +610,19 @@ async def lifespan(app: FastAPI):
                     
             except Exception as e:
                 logger.error(f"❌ 多源新闻同步失败: {e}", exc_info=True)
+
+        # ==================== YFinance新闻同步（新增）====================
+        # 仅同步自选股，频率：每4小时整点 (0 */4 * * *)
+        if settings.NEWS_SYNC_ENABLED:
+            yf_cron = "0 */4 * * *"
+            scheduler.add_job(
+                run_yfinance_news_sync,
+                CronTrigger.from_crontab(yf_cron, timezone=settings.TIMEZONE),
+                id='yfinance_news_sync',
+                name='YFinance新闻同步（自选股）',
+                replace_existing=True
+            )
+            logger.info(f"✅ YFinance新闻同步任务已配置: {yf_cron} (每4小时整点)")
 
         # ==================== 港股/美股数据配置 ====================
         # 港股和美股采用按需获取+缓存模式，不再配置定时同步任务

@@ -430,6 +430,7 @@ class ConfigService:
                     description="阿里云通义千问模型"
                 )
             ],
+
             default_llm="glm-4",
             data_source_configs=[
                 DataSourceConfig(
@@ -452,6 +453,16 @@ class ConfigService:
                     enabled=False,
                     priority=2,
                     description="Tushare专业金融数据接口"
+                ),
+                DataSourceConfig(
+                    name="yfinance",
+                    type=DataSourceType.YFINANCE,
+                    endpoint="https://query2.finance.yahoo.com",
+                    timeout=30,
+                    rate_limit=100,
+                    enabled=True,
+                    priority=3,
+                    description="Yahoo Finance国际金融数据接口 (港股/美股)"
                 )
             ],
             default_data_source="AKShare",

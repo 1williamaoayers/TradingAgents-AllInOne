@@ -1,0 +1,404 @@
+2026-01-23 10:46:17,639 | tradingagents.tools.unified_news_tool | ERROR    | unified_news_tool:_get_news_from_database:628 | [统一新闻工具] 从数据库获取新闻失败: No module named 'tenacity'
+2026-01-23 10:46:17,645 | tradingagents.tools.unified_news_tool | ERROR    | unified_news_tool:_get_news_from_database:630 | Traceback (most recent call last):
+  File "D:\anti\TradingAgents-AllInOne\src\scripts\../../src\tradingagents\tools\unified_news_tool.py", line 432, in _get_news_from_database
+    from tradingagents.dataflows.cache.app_adapter import get_mongodb_client
+  File "D:\anti\TradingAgents-AllInOne\src\scripts\../../src\tradingagents\dataflows\__init__.py", line 54, in <module>
+    from .interface import (
+    ...<27 lines>...
+    )
+  File "D:\anti\TradingAgents-AllInOne\src\scripts\../../src\tradingagents\dataflows\interface.py", line 12, in <module>
+    from .news.google_news import *
+  File "D:\anti\TradingAgents-AllInOne\src\scripts\../../src\tradingagents\dataflows\news\google_news.py", line 8, in <module>
+    from tenacity import (
+    ...<5 lines>...
+    )
+ModuleNotFoundError: No module named 'tenacity'
+
+2026-01-23 10:46:17,666 | tradingagents.tools.unified_news_tool | INFO     | unified_news_tool:_get_us_share_news:1558 | [统一新闻工具] 🕷️ [5/5] 调用 Playwright 爬虫获取深度新闻...
+2026-01-23 10:46:17,690 | tradingagents.tools.unified_news_tool | INFO     | unified_news_tool:_fetch_from_scraper:734 | [统一新闻工具] 🕷️ 启动ScraperAdapter爬取 AAPL AAPL ...
+2026-01-23 10:46:17,701 | tradingagents.tools.unified_news_tool | ERROR    | unified_news_tool:_fetch_from_scraper:753 | [统一新闻工具] 🕷️ 爬虫执行出错: 'ScraperAdapter' object has no attribute 'search'
+2026-01-23 10:46:17,960 | tradingagents.tools.unified_news_tool | INFO     | unified_news_tool:_get_us_share_news:1599 | [统一新闻工具] 🔄 智能去重: 60 条重复已移除 (原100条 → 35条)
+2026-01-23 10:46:17,967 | tradingagents.tools.unified_news_tool | INFO     | unified_news_tool:_get_us_share_news:1616 | [统一新闻工具] 🎉 美股融合完成: 3个数据源, 34780 字符
+2026-01-23 10:46:17,974 | tradingagents.tools.unified_news_tool | INFO     | unified_news_tool:get_stock_news_unified:289 | [统一新闻工具] 📊 满血版数据集构建完成，结果长度: 34780 字符
+2026-01-23 10:46:17,976 | tradingagents.tools.unified_news_tool | INFO     | unified_news_tool:get_stock_news_unified:290 | [统一新闻工具] 📋 返回结果预览 (前1000字符): # AAPL 综合新闻报告 (多源融合+智能去重)
+
+📅 生成时间: 2026-01-23 10:46:17
+📊 数据来源: FinnHub, Alpha Vantage, Serper (3个)
+📏 总数据量: 34556 字符
+🔄 去重统计: 60 条重复已移除
+
+---
+
+## 📌 来源: FinnHub
+
+=== 📰 FinnHub美股新闻 ===
+
+### Apple's reported moves could mean John Ternus will be next CEO
+- **时间**: 2026-01-23 05:44
+- **来源**: Yahoo
+- **摘要**: Apple (AAPL) reportedly quietly expanded the role of the company's hardware chief John Ternus, who is seen as a top contender to succeed Apple CEO Tim Cook, according to reporting from Bloomberg. Yaho...
+
+### Stocks track Wall St rally as Trump cools tariff threats in Davos
+- **时间**: 2026-01-22 10:49
+
+### Sector Update: Tech Stocks Higher Late Afternoon
+
+### Market Chatter: Apple Expands Hardware Chief's Role, Hinting at CEO Potential
+
+### Apple further expands role of rumored CEO candidate John Ternus
+
+### Apple Expands Hardware Chief’s Role in Latest Sign of CEO Candidacy
+- **摘要**: Cook, who has led Apple since 2011 and turned 65 in November, quietly tapped Ternus to manage the company’s 
+2026-01-23 10:46:17,977 | __main__             | INFO     | verify_news_aggregator:verify_market:30 | Result Status: success
+2026-01-23 10:46:17,977 | __main__             | INFO     | verify_news_aggregator:verify_market:31 | Market Type: 美股
+2026-01-23 10:46:17,977 | __main__             | INFO     | verify_news_aggregator:verify_market:32 | Content Length: 34780
+2026-01-23 10:46:17,978 | __main__             | ERROR    | verify_news_aggregator:verify_market:45 | ❌ Failed to verify US Share: 'gbk' codec can't encode character '\U0001f4c5' in position 29: illegal multibyte sequence
+2026-01-23 10:50:41,163 | agents               | INFO     | config_manager:_init_mongodb_storage:154 | 🔧 [ConfigManager] 开始初始化 MongoDB 存储...
+2026-01-23 10:50:41,211 | agents               | INFO     | config_manager:_init_mongodb_storage:164 | 🔍 [ConfigManager] USE_MONGODB_STORAGE=false (解析为: False)
+2026-01-23 10:50:41,245 | agents               | INFO     | config_manager:_init_mongodb_storage:167 | ℹ️ [ConfigManager] MongoDB 存储未启用，将使用 JSON 文件存储
+2026-01-23 10:50:41,826 | __main__             | INFO     | verify_news_aggregator:main:53 | Initializing UnifiedNewsAnalyzer with MockToolkit...
+2026-01-23 10:50:41,827 | __main__             | INFO     | verify_news_aggregator:verify_market:29 | 
+==================== Testing A Share (600519) ====================
+2026-01-23 10:50:41,827 | tradingagents.tools.unified_news_tool | INFO     | unified_news_tool:get_stock_news_unified:254 | [统一新闻工具] 开始获取 600519 的新闻，模型: VerificationScript
+2026-01-23 10:50:41,827 | tradingagents.tools.unified_news_tool | INFO     | unified_news_tool:get_stock_news_unified:255 | [统一新闻工具] 🤖 当前模型信息: VerificationScript
+2026-01-23 10:50:41,829 | tradingagents.tools.unified_news_tool | INFO     | unified_news_tool:get_stock_news_unified:259 | [统一新闻工具] 股票类型: A股
+2026-01-23 10:50:41,829 | tradingagents.tools.unified_news_tool | INFO     | unified_news_tool:_get_a_share_news:758 | [统一新闻工具] 🚀 获取A股 600519 新闻 (并行融合模式)
+2026-01-23 10:50:41,830 | tradingagents.tools.unified_news_tool | INFO     | unified_news_tool:_get_a_share_news:769 | [统一新闻工具] 📰 [1/5] 尝试东方财富实时新闻...
+2026-01-23 10:50:41,831 | tradingagents.tools.unified_news_tool | INFO     | unified_news_tool:_get_a_share_news:773 | [统一新闻工具] ✅ 东方财富新闻: 186 字符
+2026-01-23 10:50:41,832 | tradingagents.tools.unified_news_tool | INFO     | unified_news_tool:_get_a_share_news:781 | [统一新闻工具] 📡 [2/5] 从AKShare聚合多源快讯...
+2026-01-23 10:50:42,870 | tradingagents.tools.unified_news_tool | WARNING  | unified_news_tool:_get_a_share_news:790 | [统一新闻工具] ⚠️ AKShare多源快讯获取失败: No module named 'tenacity'
+2026-01-23 10:50:42,878 | tradingagents.tools.unified_news_tool | INFO     | unified_news_tool:_get_a_share_news:794 | [统一新闻工具] 🔍 [3/5] 尝试Google/Serper新闻...
+2026-01-23 10:50:46,717 | tradingagents.tools.unified_news_tool | INFO     | unified_news_tool:_get_a_share_news:800 | [统一新闻工具] ✅ Serper新闻: 2057 字符
+2026-01-23 10:50:46,717 | tradingagents.tools.unified_news_tool | INFO     | unified_news_tool:_get_a_share_news:816 | [统一新闻工具] 🕷️ [4/5] 调用 Playwright 爬虫获取深度新闻...
+2026-01-23 10:50:46,720 | tradingagents.tools.unified_news_tool | INFO     | unified_news_tool:_fetch_from_scraper:734 | [统一新闻工具] 🕷️ 启动ScraperAdapter爬取 600519 贵州茅台 ...
+2026-01-23 10:50:46,723 | tradingagents.tools.unified_news_tool | ERROR    | unified_news_tool:_fetch_from_scraper:753 | [统一新闻工具] 🕷️ 爬虫执行出错: 'ScraperAdapter' object has no attribute 'search'
+2026-01-23 10:50:46,724 | tradingagents.tools.unified_news_tool | INFO     | unified_news_tool:_get_a_share_news:836 | [统一新闻工具] 📦 [5/5] 从数据库获取历史新闻...
+2026-01-23 10:50:46,728 | tradingagents.tools.unified_news_tool | ERROR    | unified_news_tool:_get_news_from_database:628 | [统一新闻工具] 从数据库获取新闻失败: No module named 'tenacity'
+2026-01-23 10:50:46,731 | tradingagents.tools.unified_news_tool | ERROR    | unified_news_tool:_get_news_from_database:630 | Traceback (most recent call last):
+  File "D:\anti\TradingAgents-AllInOne\src\scripts\../../src\tradingagents\tools\unified_news_tool.py", line 432, in _get_news_from_database
+    from tradingagents.dataflows.cache.app_adapter import get_mongodb_client
+  File "D:\anti\TradingAgents-AllInOne\src\scripts\../../src\tradingagents\dataflows\__init__.py", line 54, in <module>
+    from .interface import (
+    ...<27 lines>...
+    )
+  File "D:\anti\TradingAgents-AllInOne\src\scripts\../../src\tradingagents\dataflows\interface.py", line 12, in <module>
+    from .news.google_news import *
+  File "D:\anti\TradingAgents-AllInOne\src\scripts\../../src\tradingagents\dataflows\news\google_news.py", line 8, in <module>
+    from tenacity import (
+    ...<5 lines>...
+    )
+ModuleNotFoundError: No module named 'tenacity'
+
+2026-01-23 10:50:46,733 | tradingagents.tools.unified_news_tool | INFO     | unified_news_tool:_get_a_share_news:896 | [统一新闻工具] 🎉 A股融合完成: 2个数据源, 710 字符
+2026-01-23 10:50:46,734 | tradingagents.tools.unified_news_tool | INFO     | unified_news_tool:_format_news_result:1625 | [统一新闻工具] 📋 原始新闻内容预览 (前500字符): # 600519 综合新闻报告 (A股多源融合)
+
+📅 生成时间: 2026-01-23 10:50:46
+📊 数据来源: 东方财富, Google/Serper (2个)
+📏 总数据量: 525 字符
+🔄 去重统计: 30 条重复已移除
+
+---
+
+
+## 📌 来源: 东方财富实时新闻
+
+Mock News for 600519 from EastMoney Content filler Content filler Content filler Content filler Content filler Content filler Content filler Content filler Content filler Content filler 
+
+---
+
+## 📌 来源: Google/Serper新闻
+
+### 贵州茅台(600519) 股价、新闻、报价和图表- 富途牛牛
+
+### 贵州茅台(600519)股票股价,行情,新闻,财报,数据
+
+### 贵州茅台:1376.00 -0.43% -6.00 600519 搜狐证券
+
+### 贵州茅台(600519)最新消息
+
+
+2026-01-23 10:50:46,735 | tradingagents.tools.unified_news_tool | INFO     | unified_news_tool:_format_news_result:1626 | [统一新闻工具] 📊 原始内容长度: 710 字符
+2026-01-23 10:50:46,735 | tradingagents.dataflows.providers.china.akshare | INFO     | akshare:__init__:47 | 📦 使用本地AKShare库
+2026-01-23 10:50:47,439 | tradingagents.dataflows.providers.china.akshare | INFO     | akshare:_initialize_akshare:62 | 🔧 检测到 curl_cffi，将使用它来模拟真实浏览器 TLS 指纹
+2026-01-23 10:50:47,440 | tradingagents.dataflows.providers.china.akshare | INFO     | akshare:_initialize_akshare:165 | 🔧 已修复AKShare的headers问题，使用 curl_cffi 模拟真实浏览器（Chrome 120）
+2026-01-23 10:50:47,442 | tradingagents.dataflows.providers.china.akshare | INFO     | akshare:_configure_timeout:459 | 🔧 AKShare超时配置完成: 60秒
+2026-01-23 10:50:47,443 | tradingagents.dataflows.providers.china.akshare | INFO     | akshare:_initialize_akshare:175 | ✅ AKShare连接成功
+2026-01-23 10:50:50,014 | tradingagents.tools.unified_news_tool | INFO     | unified_news_tool:get_stock_news_unified:282 | [统一新闻工具] ✅ 成功注入资金流数据
+2026-01-23 10:50:50,016 | tradingagents.tools.unified_news_tool | INFO     | unified_news_tool:get_stock_news_unified:289 | [统一新闻工具] 📊 满血版数据集构建完成，结果长度: 1145 字符
+2026-01-23 10:50:50,017 | tradingagents.tools.unified_news_tool | INFO     | unified_news_tool:get_stock_news_unified:290 | [统一新闻工具] 📋 返回结果预览 (前1000字符): 
+=== 💰 北向资金(沪深股通) 实战动向 ===
+- 2024-08-16: ⚪ 持平 0.00 万元, 南向持股比 6.55%
+- 2024-08-15: ⚪ 持平 0.00 万元, 南向持股比 6.55%
+- 2024-08-14: ⚪ 持平 0.00 万元, 南向持股比 6.53%
+- 2024-08-13: ⚪ 持平 0.00 万元, 南向持股比 6.55%
+- 2024-08-12: ⚪ 持平 0.00 万元, 南向持股比 6.55%
+
+=== 📰 新闻数据来源: A股多源融合(东方财富,Google/Serper) ===
+获取时间: 2026-01-23 10:50:46
+数据长度: 710 字符
+模型类型: VerificationScript
+
+
+=== 📋 新闻内容 ===
+# 600519 综合新闻报告 (A股多源融合)
+
+📅 生成时间: 2026-01-23 10:50:46
+📊 数据来源: 东方财富, Google/Serper (2个)
+📏 总数据量: 525 字符
+🔄 去重统计: 30 条重复已移除
+
+---
+
+
+## 📌 来源: 东方财富实时新闻
+
+Mock News for 600519 from EastMoney Content filler Content filler Content filler Content filler Content filler Content filler Content filler Content filler Content filler Content filler 
+
+---
+
+## 📌 来源: Google/Serper新闻
+
+### 贵州茅台(600519) 股价、新闻、报价和图表- 富途牛牛
+
+### 贵州茅台(600519)股票股价,行情,新闻,财报,数据
+
+### 贵州茅台:1376.00 -0.43% -6.00 600519 搜狐证券
+
+### 贵州茅台(600519)最新消息
+
+### 贵州茅台股价七连跌创阶段新低飞天上线i茅台21天仍“难买”
+
+### 贵州茅台(SH600519)股票股价_股价行情_讨论
+
+### 贵州茅台(600519)历史市盈率|PE|估值——亿牛网
+
+### 贵州茅台(600519) 新闻动态- 富途牛牛
+
+### 贵州茅台(600519)
+2026-01-23 10:50:50,018 | __main__             | INFO     | verify_news_aggregator:verify_market:32 | Result Status: success
+2026-01-23 10:50:50,018 | __main__             | INFO     | verify_news_aggregator:verify_market:33 | Market Type: A股
+2026-01-23 10:50:50,019 | __main__             | INFO     | verify_news_aggregator:verify_market:34 | Content Length: 1145
+2026-01-23 10:50:50,019 | __main__             | ERROR    | verify_news_aggregator:verify_market:47 | ❌ Failed to verify A Share: 'gbk' codec can't encode character '\U0001f4b0' in position 6: illegal multibyte sequence
+2026-01-23 10:50:50,021 | __main__             | INFO     | verify_news_aggregator:verify_market:29 | 
+==================== Testing HK Share (00700) ====================
+2026-01-23 10:50:50,021 | tradingagents.tools.unified_news_tool | INFO     | unified_news_tool:get_stock_news_unified:254 | [统一新闻工具] 开始获取 00700 的新闻，模型: VerificationScript
+2026-01-23 10:50:50,021 | tradingagents.tools.unified_news_tool | INFO     | unified_news_tool:get_stock_news_unified:255 | [统一新闻工具] 🤖 当前模型信息: VerificationScript
+2026-01-23 10:50:50,022 | tradingagents.tools.unified_news_tool | INFO     | unified_news_tool:get_stock_news_unified:259 | [统一新闻工具] 股票类型: 港股
+2026-01-23 10:50:50,022 | tradingagents.tools.unified_news_tool | INFO     | unified_news_tool:_get_hk_share_news:904 | [统一新闻工具] 🚀 获取港股 00700 新闻 (并行融合模式)
+2026-01-23 10:50:50,022 | tradingagents.tools.unified_news_tool | INFO     | unified_news_tool:_get_hk_share_news:918 | [统一新闻工具] 📰 [1/6] 从东方财富获取最新个股新闻...
+2026-01-23 10:50:50,382 | tradingagents.dataflows.providers.base_provider.AKShare | INFO     | akshare:_get_stock_news_direct:447 | ✅ 00700 闭环抓取完成: 共 12 条 (核心=00700, 增强=00700)
+2026-01-23 10:50:50,383 | tradingagents.dataflows.providers.base_provider.AKShare | INFO     | akshare:get_stock_news_sync:1388 | ✅ 同步接口获取到 12 条个股新闻 (00700)
+2026-01-23 10:50:50,385 | tradingagents.tools.unified_news_tool | INFO     | unified_news_tool:_get_hk_share_news:935 | [统一新闻工具] ✅ 东方财富: 10条, 1687 字符
+2026-01-23 10:50:50,386 | tradingagents.tools.unified_news_tool | INFO     | unified_news_tool:_get_hk_share_news:944 | [统一新闻工具] 🕷️ [7/7] 调用 Playwright 爬虫获取深度新闻...
+2026-01-23 10:50:50,387 | tradingagents.tools.unified_news_tool | WARNING  | unified_news_tool:_get_hk_share_news:961 | [统一新闻工具] ⚠️ Playwright爬虫调用失败: cannot access free variable 'asyncio' where it is not associated with a value in enclosing scope
+2026-01-23 10:50:50,401 | tradingagents.tools.unified_news_tool | INFO     | unified_news_tool:_get_hk_share_news:965 | [统一新闻工具] 📡 [2/6] 从AKShare聚合多源快讯...
+2026-01-23 10:50:50,402 | tradingagents.dataflows.providers.china.akshare | INFO     | akshare:get_multi_source_news:2135 | 🚀 [多源新闻] 开始聚合7个新闻源...
+2026-01-23 10:50:50,403 | tradingagents.dataflows.providers.china.akshare | INFO     | akshare:get_news_cls_telegraph:1996 | 📰 [财联社电报] 获取实时快讯...
+2026-01-23 10:50:54,188 | tradingagents.dataflows.providers.china.akshare | INFO     | akshare:get_news_cls_telegraph:2000 | ✅ [财联社电报] 获取成功: 5 条
+2026-01-23 10:50:54,194 | tradingagents.dataflows.providers.china.akshare | INFO     | akshare:get_news_global_em:2016 | 📰 [东财全球快讯] 获取财经要闻...
+2026-01-23 10:50:54,614 | tradingagents.dataflows.providers.china.akshare | INFO     | akshare:get_news_global_em:2020 | ✅ [东财全球快讯] 获取成功: 5 条
+2026-01-23 10:50:54,616 | tradingagents.dataflows.providers.china.akshare | INFO     | akshare:get_news_global_sina:2036 | 📰 [新浪快讯] 获取财经快讯...
+2026-01-23 10:50:57,883 | tradingagents.dataflows.providers.china.akshare | INFO     | akshare:get_news_global_sina:2040 | ✅ [新浪快讯] 获取成功: 5 条
+2026-01-23 10:50:57,887 | tradingagents.dataflows.providers.china.akshare | INFO     | akshare:get_news_global_ths:2056 | 📰 [同花顺直播] 获取财经直播...
+2026-01-23 10:51:01,157 | tradingagents.dataflows.providers.china.akshare | INFO     | akshare:get_news_global_ths:2060 | ✅ [同花顺直播] 获取成功: 5 条
+2026-01-23 10:51:01,159 | tradingagents.dataflows.providers.china.akshare | INFO     | akshare:get_news_futu:2076 | 📰 [富途快讯] 获取快讯...
+2026-01-23 10:51:04,504 | tradingagents.dataflows.providers.china.akshare | INFO     | akshare:get_news_futu:2080 | ✅ [富途快讯] 获取成功: 5 条
+2026-01-23 10:51:04,506 | tradingagents.dataflows.providers.china.akshare | INFO     | akshare:get_news_caixin:2096 | 📰 [财新网] 获取财经精选...
+2026-01-23 10:51:09,190 | tradingagents.dataflows.providers.china.akshare | INFO     | akshare:get_news_caixin:2100 | ✅ [财新网] 获取成功: 5 条
+2026-01-23 10:51:09,194 | tradingagents.dataflows.providers.china.akshare | INFO     | akshare:get_news_breakfast:2116 | 📰 [财经早餐] 获取今日要闻...
+2026-01-23 10:51:10,148 | tradingagents.dataflows.providers.china.akshare | INFO     | akshare:get_news_breakfast:2120 | ✅ [财经早餐] 获取成功: 5 条
+2026-01-23 10:51:10,150 | tradingagents.dataflows.providers.china.akshare | INFO     | akshare:get_multi_source_news:2265 | ✅ [多源新闻] 聚合完成: 6个源, 2006 字符
+2026-01-23 10:51:10,152 | tradingagents.tools.unified_news_tool | INFO     | unified_news_tool:_get_hk_share_news:970 | [统一新闻工具] ✅ AKShare多源快讯: 2006 字符
+2026-01-23 10:51:10,153 | tradingagents.tools.unified_news_tool | INFO     | unified_news_tool:_get_hk_share_news:978 | [统一新闻工具] 🔍 [3/6] 从Serper获取实时新闻...
+2026-01-23 10:51:14,295 | tradingagents.tools.unified_news_tool | INFO     | unified_news_tool:_get_hk_share_news:982 | [统一新闻工具] ✅ Serper: 2349 字符
+2026-01-23 10:51:14,296 | tradingagents.tools.unified_news_tool | INFO     | unified_news_tool:_get_hk_share_news:997 | [统一新闻工具] 📈 [4/6] 从Alpha Vantage获取美股新闻...
+2026-01-23 10:51:14,298 | tradingagents.tools.alpha_vantage_news | INFO     | alpha_vantage_news:get_alpha_vantage_news:41 | [Alpha Vantage] 请求个股新闻: 00700, limit=10
+2026-01-23 10:51:17,965 | tradingagents.tools.alpha_vantage_news | ERROR    | alpha_vantage_news:get_alpha_vantage_news:90 | [Alpha Vantage] 请求失败: Expecting value: line 1 column 1 (char 0)
+2026-01-23 10:51:17,966 | tradingagents.tools.unified_news_tool | INFO     | unified_news_tool:_get_hk_share_news:1010 | [统一新闻工具] 📡 [5/6] 从RSS源获取新闻...
+2026-01-23 10:51:17,969 | tradingagents.tools.unified_news_tool | WARNING  | unified_news_tool:_get_hk_share_news:1045 | [统一新闻工具] ⚠️ RSS新闻获取失败: No module named 'feedparser'
+2026-01-23 10:51:17,974 | tradingagents.tools.unified_news_tool | INFO     | unified_news_tool:_get_hk_share_news:1049 | [统一新闻工具] 📦 [6/6] 从数据库获取历史新闻...
+2026-01-23 10:51:17,977 | tradingagents.tools.unified_news_tool | ERROR    | unified_news_tool:_get_news_from_database:628 | [统一新闻工具] 从数据库获取新闻失败: No module named 'tenacity'
+2026-01-23 10:51:17,978 | tradingagents.tools.unified_news_tool | ERROR    | unified_news_tool:_get_news_from_database:630 | Traceback (most recent call last):
+  File "D:\anti\TradingAgents-AllInOne\src\scripts\../../src\tradingagents\tools\unified_news_tool.py", line 432, in _get_news_from_database
+    from tradingagents.dataflows.cache.app_adapter import get_mongodb_client
+  File "D:\anti\TradingAgents-AllInOne\src\scripts\../../src\tradingagents\dataflows\__init__.py", line 54, in <module>
+    from .interface import (
+    ...<27 lines>...
+    )
+  File "D:\anti\TradingAgents-AllInOne\src\scripts\../../src\tradingagents\dataflows\interface.py", line 12, in <module>
+    from .news.google_news import *
+  File "D:\anti\TradingAgents-AllInOne\src\scripts\../../src\tradingagents\dataflows\news\google_news.py", line 8, in <module>
+    from tenacity import (
+    ...<5 lines>...
+    )
+ModuleNotFoundError: No module named 'tenacity'
+
+2026-01-23 10:51:18,008 | tradingagents.tools.unified_news_tool | INFO     | unified_news_tool:_get_hk_share_news:1111 | [统一新闻工具] 🔄 智能去重: 51 条重复新闻已移除 (原85条 → 34条)
+2026-01-23 10:51:18,009 | tradingagents.tools.unified_news_tool | INFO     | unified_news_tool:_get_hk_share_news:1129 | [统一新闻工具] 🎉 融合完成: 3个数据源, 2945 字符, 去重51条
+2026-01-23 10:51:18,010 | tradingagents.tools.unified_news_tool | INFO     | unified_news_tool:_format_news_result:1625 | [统一新闻工具] 📋 原始新闻内容预览 (前500字符): # 00700 综合新闻报告 (多源融合+智能去重)
+
+📅 生成时间: 2026-01-23 10:51:18
+📊 数据来源: 东方财富, 多源快讯, Serper (3个)
+📏 总数据量: 2737 字符
+🔄 去重统计: 51 条重复已移除
+
+---
+
+
+## 📌 来源: 东方财富个股新闻
+
+=== 📰 东方财富个股新闻（最新）===
+
+### 翌日披露报表
+
+### 翌日披露报表 - 已发行股份变动及股份购回
+
+### 腾讯控股(00700.HK)连续39日回购，累计回购4046.00万股
+
+### 腾讯控股(00700.HK)1月15日回购6.36亿港元，年内累计回购63.58亿港元
+
+### 腾讯控股(00700.HK)1月13日回购101.20万股，耗资6.36亿港元
+
+### 腾讯控股(00700.HK)连续37日回购，累计斥资235.22亿港元
+
+### 腾讯控股(00700.HK)1月9日回购103.90万股，耗资6.36亿港元
+
+
+### 腾讯控股(00700.HK)1月7日回购102.30万股，耗资6.36亿港元
+
+### 腾讯控股(00700.HK)1月6日回购1
+2026-01-23 10:51:18,011 | tradingagents.tools.unified_news_tool | INFO     | unified_news_tool:_format_news_result:1626 | [统一新闻工具] 📊 原始内容长度: 2945 字符
+2026-01-23 10:51:19,180 | tradingagents.tools.unified_news_tool | INFO     | unified_news_tool:get_stock_news_unified:282 | [统一新闻工具] ✅ 成功注入资金流数据
+2026-01-23 10:51:19,181 | tradingagents.tools.unified_news_tool | INFO     | unified_news_tool:get_stock_news_unified:289 | [统一新闻工具] 📊 满血版数据集构建完成，结果长度: 3390 字符
+2026-01-23 10:51:19,182 | tradingagents.tools.unified_news_tool | INFO     | unified_news_tool:get_stock_news_unified:290 | [统一新闻工具] 📋 返回结果预览 (前1000字符): 
+=== 💰 南向资金(港股通) 实战动向 ===
+- 2026-01-22: 🟢 净流出 -44.18 亿元, 南向持股比 11.13%
+- 2026-01-21: 🔴 净流入 17.90 亿元, 南向持股比 11.12%
+- 2026-01-20: 🟢 净流出 -90.94 亿元, 南向持股比 11.11%
+- 2026-01-19: 🟢 净流出 -69.77 亿元, 南向持股比 11.11%
+- 2026-01-16: 🟢 净流出 -25.82 亿元, 南向持股比 11.1%
+
+=== 📰 新闻数据来源: 多源融合(东方财富,多源快讯,Serper) ===
+获取时间: 2026-01-23 10:51:18
+数据长度: 2945 字符
+模型类型: VerificationScript
+
+
+=== 📋 新闻内容 ===
+# 00700 综合新闻报告 (多源融合+智能去重)
+
+📅 生成时间: 2026-01-23 10:51:18
+📊 数据来源: 东方财富, 多源快讯, Serper (3个)
+📏 总数据量: 2737 字符
+🔄 去重统计: 51 条重复已移除
+
+---
+
+
+## 📌 来源: 东方财富个股新闻
+
+=== 📰 东方财富个股新闻（最新）===
+
+### 翌日披露报表
+
+### 翌日披露报表 - 已发行股份变动及股份购回
+
+### 腾讯控股(00700.HK)连续39日回购，累计回购4046.00万股
+
+### 腾讯控股(00700.HK)1月15日回购6.36亿港元，年内累计回购63.58亿港元
+
+### 腾讯控股(00700.HK)1月13日回购101.20万股，耗资6.36亿港元
+
+### 腾讯控股(00700.HK)连续37日回购，累计斥资235.22亿港元
+
+### 腾讯控股(00700.HK)1月9日回购103.90万股，耗资6.36亿港元
+
+
+### 腾讯控股(00700.HK)1月7日回购102.30万股，耗资6.36亿港元
+
+### 腾讯控股(00700.HK)1月6日回购100.30万股，耗资6.36亿港元
+
+
+---
+
+## 📌 来源: AKShare多源快讯
+
+# 📰 多源财经快讯聚合
+
+📊 成功数据源: 财联社, 东财快讯, 新浪, 同花顺, 富途, 早餐 (6个)
+
+---
+
+## 📌 财联社电报
+
+- **国家知识产权局：
+2026-01-23 10:51:19,193 | __main__             | INFO     | verify_news_aggregator:verify_market:32 | Result Status: success
+2026-01-23 10:51:19,193 | __main__             | INFO     | verify_news_aggregator:verify_market:33 | Market Type: 港股
+2026-01-23 10:51:19,193 | __main__             | INFO     | verify_news_aggregator:verify_market:34 | Content Length: 3390
+2026-01-23 10:51:19,193 | __main__             | ERROR    | verify_news_aggregator:verify_market:47 | ❌ Failed to verify HK Share: 'gbk' codec can't encode character '\U0001f4b0' in position 6: illegal multibyte sequence
+2026-01-23 10:51:19,195 | __main__             | INFO     | verify_news_aggregator:verify_market:29 | 
+==================== Testing US Share (AAPL) ====================
+2026-01-23 10:51:19,195 | tradingagents.tools.unified_news_tool | INFO     | unified_news_tool:get_stock_news_unified:254 | [统一新闻工具] 开始获取 AAPL 的新闻，模型: VerificationScript
+2026-01-23 10:51:19,195 | tradingagents.tools.unified_news_tool | INFO     | unified_news_tool:get_stock_news_unified:255 | [统一新闻工具] 🤖 当前模型信息: VerificationScript
+2026-01-23 10:51:19,196 | tradingagents.tools.unified_news_tool | INFO     | unified_news_tool:get_stock_news_unified:259 | [统一新闻工具] 股票类型: 美股
+2026-01-23 10:51:19,196 | tradingagents.tools.unified_news_tool | INFO     | unified_news_tool:_get_us_share_news:1481 | [统一新闻工具] 🇺🇸 获取美股 AAPL 新闻（多源融合模式）
+2026-01-23 10:51:19,197 | tradingagents.tools.unified_news_tool | INFO     | unified_news_tool:_get_us_share_news:1488 | [统一新闻工具] 📰 [1/4] 从FinnHub获取新闻...
+2026-01-23 10:51:22,805 | tradingagents.tools.unified_news_tool | WARNING  | unified_news_tool:_get_us_share_news:1517 | [统一新闻工具] ⚠️ FinnHub获取失败: Expecting value: line 1 column 1 (char 0)
+2026-01-23 10:51:22,823 | tradingagents.tools.unified_news_tool | INFO     | unified_news_tool:_get_us_share_news:1521 | [统一新闻工具] 📈 [2/4] 从Alpha Vantage获取新闻...
+2026-01-23 10:51:22,824 | tradingagents.tools.alpha_vantage_news | INFO     | alpha_vantage_news:get_alpha_vantage_news:41 | [Alpha Vantage] 请求个股新闻: AAPL, limit=10
+2026-01-23 10:51:26,640 | tradingagents.tools.alpha_vantage_news | ERROR    | alpha_vantage_news:get_alpha_vantage_news:90 | [Alpha Vantage] 请求失败: Expecting value: line 1 column 1 (char 0)
+2026-01-23 10:51:26,641 | tradingagents.tools.unified_news_tool | INFO     | unified_news_tool:_get_us_share_news:1534 | [统一新闻工具] 🔍 [3/4] 从Serper获取实时新闻...
+2026-01-23 10:51:31,814 | tradingagents.tools.unified_news_tool | INFO     | unified_news_tool:_get_us_share_news:1538 | [统一新闻工具] ✅ Serper: 3180 字符
+2026-01-23 10:51:31,815 | tradingagents.tools.unified_news_tool | INFO     | unified_news_tool:_get_us_share_news:1546 | [统一新闻工具] 📦 [4/5] 从数据库获取历史新闻...
+2026-01-23 10:51:31,818 | tradingagents.tools.unified_news_tool | ERROR    | unified_news_tool:_get_news_from_database:628 | [统一新闻工具] 从数据库获取新闻失败: No module named 'tenacity'
+2026-01-23 10:51:31,818 | tradingagents.tools.unified_news_tool | ERROR    | unified_news_tool:_get_news_from_database:630 | Traceback (most recent call last):
+  File "D:\anti\TradingAgents-AllInOne\src\scripts\../../src\tradingagents\tools\unified_news_tool.py", line 432, in _get_news_from_database
+    from tradingagents.dataflows.cache.app_adapter import get_mongodb_client
+  File "D:\anti\TradingAgents-AllInOne\src\scripts\../../src\tradingagents\dataflows\__init__.py", line 54, in <module>
+    from .interface import (
+    ...<27 lines>...
+    )
+  File "D:\anti\TradingAgents-AllInOne\src\scripts\../../src\tradingagents\dataflows\interface.py", line 12, in <module>
+    from .news.google_news import *
+  File "D:\anti\TradingAgents-AllInOne\src\scripts\../../src\tradingagents\dataflows\news\google_news.py", line 8, in <module>
+    from tenacity import (
+    ...<5 lines>...
+    )
+ModuleNotFoundError: No module named 'tenacity'
+
+2026-01-23 10:51:31,819 | tradingagents.tools.unified_news_tool | INFO     | unified_news_tool:_get_us_share_news:1558 | [统一新闻工具] 🕷️ [5/5] 调用 Playwright 爬虫获取深度新闻...
+2026-01-23 10:51:31,820 | tradingagents.tools.unified_news_tool | INFO     | unified_news_tool:_fetch_from_scraper:734 | [统一新闻工具] 🕷️ 启动ScraperAdapter爬取 AAPL AAPL ...
+2026-01-23 10:51:31,821 | tradingagents.tools.unified_news_tool | ERROR    | unified_news_tool:_fetch_from_scraper:753 | [统一新闻工具] 🕷️ 爬虫执行出错: 'ScraperAdapter' object has no attribute 'search'
+2026-01-23 10:51:31,836 | tradingagents.tools.unified_news_tool | INFO     | unified_news_tool:_get_us_share_news:1599 | [统一新闻工具] 🔄 智能去重: 12 条重复已移除 (原40条 → 22条)
+2026-01-23 10:51:31,837 | tradingagents.tools.unified_news_tool | INFO     | unified_news_tool:_get_us_share_news:1616 | [统一新闻工具] 🎉 美股融合完成: 1个数据源, 2664 字符
+2026-01-23 10:51:31,840 | tradingagents.tools.unified_news_tool | INFO     | unified_news_tool:get_stock_news_unified:289 | [统一新闻工具] 📊 满血版数据集构建完成，结果长度: 2664 字符
+2026-01-23 10:51:31,842 | tradingagents.tools.unified_news_tool | INFO     | unified_news_tool:get_stock_news_unified:290 | [统一新闻工具] 📋 返回结果预览 (前1000字符): # AAPL 综合新闻报告 (多源融合+智能去重)
+
+📅 生成时间: 2026-01-23 10:51:31
+📊 数据来源: Serper (1个)
+📏 总数据量: 2521 字符
+🔄 去重统计: 12 条重复已移除
+
+---
+
+## 📌 来源: Serper实时搜索
+
+### Apple (AAPL) Reports Next Week: Wall Street Expects ...
+- **来源**: https://finance.yahoo.com/news/apple-aapl-reports-next-week-150013834.html
+- **时间**: 12 hours ago
+- **摘要**: Apple (AAPL) is expected to deliver a year-over-year increase in earnings on higher revenues when it reports results for the quarter ended December 2025.
+
+### Apple Inc. (AAPL) Stock Price, Quote, News & Analysis
+- **来源**: https://seekingalpha.com/symbol/AAPL
+- **时间**: 26 minutes ago
+
+### Buy or Sell Apple Stock - AAPL Stock Price Quote & News
+- **来源**: https://robinhood.com/us/en/stocks/AAPL/
+- **摘要**: With a market cap of 3.65T, Apple(AAPL) trades at $246.76. The stock has a price-to-earnings ratio of 33.17 and currently yields dividends of 41.6%. On 2026- ...
+
+### Evaluating Apple (AAPL) Valuation After Recent Mixed ...
+- **来源**: https://simplywall.st/stocks/us/tech/nasdaq-a
+2026-01-23 10:51:31,844 | __main__             | INFO     | verify_news_aggregator:verify_market:32 | Result Status: success
+2026-01-23 10:51:31,846 | __main__             | INFO     | verify_news_aggregator:verify_market:33 | Market Type: 美股
+2026-01-23 10:51:31,847 | __main__             | INFO     | verify_news_aggregator:verify_market:34 | Content Length: 2664
+2026-01-23 10:51:31,847 | __main__             | ERROR    | verify_news_aggregator:verify_market:47 | ❌ Failed to verify US Share: 'gbk' codec can't encode character '\U0001f4c5' in position 29: illegal multibyte sequence

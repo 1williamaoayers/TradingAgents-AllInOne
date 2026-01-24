@@ -56,9 +56,13 @@ class DataCompletenessChecker:
             "completeness_ratio": 0.0
         }
         
-        # 1. 检查数据是否为空或错误
-        if not data or "❌" in data or "错误" in data or "获取失败" in data:
-            return False, "数据为空或包含错误", details
+        # 1. 检查数据是否为空
+        if not data:
+            return False, "数据为空", details
+            
+        # 宽松检查：即使包含"错误"字样，只要长度足够且能解析出DataFrame，也视为尝试成功（可能是降级数据）
+        if ("❌" in data or "错误" in data) and len(data) < 200:
+             return False, "数据包含错误且内容过短", details
         
         # 2. 尝试解析数据
         try:
@@ -205,12 +209,19 @@ class DataCompletenessChecker:
                     if latest_date:
                         return latest_date
             
-            # 备用方案：假设最新交易日是今天或昨天（如果今天是周末则往前推）
+            # 针对其他市场 (HK/US) 的简单处理：回溯最近的工作日
+            # TODO: 未来可以接入 yfinance 获取真实交易日历
+            target_tz = None
+            if market == "US":
+                # 美股交易时间需考虑时区差异 (EST)
+                pass 
+            
+            # 通用备用方案：假设最新交易日是今天或昨天（如果今天是周末则往前推）
             today = datetime.now()
             for delta in range(0, 5):  # 最多回溯5天
                 check_date = today - timedelta(days=delta)
-                # 跳过周末
-                if check_date.weekday() < 5:  # 0-4 是周一到周五
+                # 跳过周末 (0-4 是周一到周五)
+                if check_date.weekday() < 5: 
                     return check_date.strftime('%Y-%m-%d')
             
             return None

@@ -1,0 +1,13 @@
+{
+  "enabled": true,
+  "name": "全局规则自检",
+  "description": "在 agent 完成任务后自动执行规则自检，确保遵守 .antigravityrules 中的所有规则",
+  "version": "1",
+  "when": {
+    "type": "agentStop"
+  },
+  "then": {
+    "type": "askAgent",
+    "prompt": "执行规则自检：检查刚才的操作是否遵守了 .antigravityrules 和 .agent/workflows/rule.md 中的所有规则。重点检查：1) 是否全中文回复 2) 是否提供了证据 3) 是否避免了推测 4) 是否正确使用了工具 5) 是否遵守了防卡死协议。如发现违规，立即说明并纠正。"
+  }
+}

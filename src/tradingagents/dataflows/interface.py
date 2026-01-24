@@ -1603,14 +1603,9 @@ def get_china_stock_data_unified(
                           extra={
                               'function': 'get_china_stock_data_unified',
                               'ticker': ticker,
-                              'start_date': start_date,
-                              'end_date': end_date,
-                              'duration': duration,
                               'result_length': result_length,
-                              'result_preview': result[:300] + '...' if result_length > 300 else result,
                               'event_type': 'unified_data_call_warning'
                           })
-
         return result
 
     except Exception as e:
@@ -1834,6 +1829,19 @@ def get_hk_stock_data_unified(symbol: str, start_date: str = None, end_date: str
                         logger.warning(f"⚠️ FINNHUB返回错误结果，尝试下一个数据源")
                 except Exception as e:
                     logger.error(f"⚠️ FINNHUB港股数据获取失败: {e}，尝试下一个数据源")
+
+        # 🚨 [强制兜底] 如果所有配置的数据源都失败了，且 yfinance 未在通过列表里，强制尝试 yfinance
+        if 'yfinance' not in enabled_sources and HK_STOCK_AVAILABLE:
+            try:
+                logger.info(f"🔄 [兜底机制] 所有配置源失败，强制唤醒 Yahoo Finance: {symbol}")
+                result = get_hk_stock_data(symbol, start_date, end_date)
+                if result and "❌" not in result:
+                    logger.info(f"✅ [兜底成功] Yahoo Finance港股数据获取成功: {symbol}")
+                    return result
+                else:
+                    logger.warning(f"⚠️ [兜底失败] Yahoo Finance返回错误结果")
+            except Exception as e:
+                logger.error(f"⚠️ [兜底失败] Yahoo Finance异常: {e}")
 
         # 所有数据源都失败
         error_msg = f"❌ 无法获取港股{symbol}数据 - 所有启用的数据源都不可用"

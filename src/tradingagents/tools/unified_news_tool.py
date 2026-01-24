@@ -296,6 +296,26 @@ class UnifiedNewsAnalyzer:
             logger.warning(f"[统一新闻工具] ⚠️ 返回结果异常短或为空！")
             logger.warning(f"[统一新闻工具] 📝 完整结果内容: '{result_str}'")
         
+        
+        # 🔥 动态注入标准脚注（真实来源）
+        if result_str:
+            current_date_str = datetime.now().strftime('%Y-%m-%d')
+            # 尝试从 _get_xx_share_news 的返回结果中提取来源信息（如果可能）
+            # 由于 _get_xx_share_news 返回的是字符串，我们可能无法直接获取 sources_used 列表
+            # 但我们可以解析 report 中的 "📊 数据来源: ..." 行
+            
+            real_sources = "多源聚合" # 默认
+            match = re.search(r'📊 数据来源: (.+?) \(', result_str)
+            if match:
+                real_sources = match.group(1)
+            
+            # 如果之前的硬编码还在，先移除（防止重复）
+            result_str = re.sub(r'\n\n---\n\*数据来源：.*?\n\*报告生成时间：.*?\*', '', result_str, flags=re.DOTALL)
+
+            footer = f"\n\n---\n*数据来源：{real_sources}（截至{current_date_str}）*\n*报告生成时间：{current_date_str}*"
+            result_str += footer
+            logger.info(f"[统一新闻工具] ✅ 已注入动态标准脚注: {real_sources}")
+
         # 构造返回字典
         return {
             "status": "success" if result_str and len(result_str) > 50 else "warning",

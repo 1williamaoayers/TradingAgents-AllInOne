@@ -1,0 +1,200 @@
+﻿馃攳 [setup_logging] 鏈€缁坔andlers閰嶇疆: ['console', 'main_file', 'file', 'worker_file', 'error_file']
+馃攳 [setup_logging] 寮€濮嬪簲鐢?dictConfig
+鉁?[setup_logging] dictConfig 搴旂敤鎴愬姛
+2026-01-24 02:23:35 | INFO     | webapi | Logging configured from config/logging_docker.toml trace=-
+2026-01-24 02:23:35 | INFO     | tradingagents | 馃攳 娴嬭瘯涓绘棩蹇楁枃浠跺啓鍏? /app/logs/tradingagents.log trace=-
+馃攳 [setup_logging] 宸插悜 tradingagents logger 鍐欏叆娴嬭瘯鏃ュ織
+2026-01-24 02:23:35 | INFO     | app.core.startup_validator | 馃攳 寮€濮嬮獙璇佸惎鍔ㄩ厤缃?.. trace=-
+2026-01-24 02:23:35 | ERROR    | app.core.startup_validator | 鉂?缂哄皯蹇呴渶閰嶇疆: MONGODB_HOST trace=-
+2026-01-24 02:23:35 | ERROR    | app.core.startup_validator | 鉂?缂哄皯蹇呴渶閰嶇疆: MONGODB_PORT trace=-
+2026-01-24 02:23:35 | ERROR    | app.core.startup_validator | 鉂?缂哄皯蹇呴渶閰嶇疆: REDIS_HOST trace=-
+2026-01-24 02:23:35 | ERROR    | app.core.startup_validator | 鉂?缂哄皯蹇呴渶閰嶇疆: REDIS_PORT trace=-
+2026-01-24 02:23:35 | WARNING  | app.core.startup_validator | 鈿狅笍  缂哄皯鎺ㄨ崘閰嶇疆: TUSHARE_TOKEN trace=-
+2026-01-24 02:23:35 | INFO     | app.core.startup_validator | 鈩癸笍  寮€鍙戠幆澧冩ā寮忥紙DEBUG=true锛?trace=-
+2026-01-24 02:23:35 | INFO     | app.core.startup_validator | 
+====================================================================== trace=-
+2026-01-24 02:23:35 | INFO     | app.core.startup_validator | TradingAgents-CN Configuration Validation Result trace=-
+2026-01-24 02:23:35 | INFO     | app.core.startup_validator | ====================================================================== trace=-
+2026-01-24 02:23:35 | INFO     | app.core.startup_validator | 
+Missing required configurations: trace=-
+2026-01-24 02:23:35 | INFO     | app.core.startup_validator |    - MONGODB_HOST trace=-
+2026-01-24 02:23:35 | INFO     | app.core.startup_validator |      Description: MongoDB涓绘満鍦板潃 trace=-
+2026-01-24 02:23:35 | INFO     | app.core.startup_validator |      Example: localhost trace=-
+2026-01-24 02:23:35 | INFO     | app.core.startup_validator |    - MONGODB_PORT trace=-
+2026-01-24 02:23:35 | INFO     | app.core.startup_validator |      Description: MongoDB绔彛 trace=-
+2026-01-24 02:23:35 | INFO     | app.core.startup_validator |      Example: 27017 trace=-
+2026-01-24 02:23:35 | INFO     | app.core.startup_validator |    - REDIS_HOST trace=-
+2026-01-24 02:23:35 | INFO     | app.core.startup_validator |      Description: Redis涓绘満鍦板潃 trace=-
+2026-01-24 02:23:35 | INFO     | app.core.startup_validator |      Example: localhost trace=-
+2026-01-24 02:23:35 | INFO     | app.core.startup_validator |    - REDIS_PORT trace=-
+2026-01-24 02:23:35 | INFO     | app.core.startup_validator |      Description: Redis绔彛 trace=-
+2026-01-24 02:23:35 | INFO     | app.core.startup_validator |      Example: 6379 trace=-
+2026-01-24 02:23:35 | INFO     | app.core.startup_validator | 
+Missing recommended configurations (won't affect startup): trace=-
+2026-01-24 02:23:35 | INFO     | app.core.startup_validator |    - TUSHARE_TOKEN trace=-
+2026-01-24 02:23:35 | INFO     | app.core.startup_validator |      Description: Tushare Token锛堟帹鑽愶紝涓撲笟A鑲℃暟鎹級 trace=-
+2026-01-24 02:23:35 | INFO     | app.core.startup_validator |      Get it from: https://tushare.pro/register?reg=tacn trace=-
+2026-01-24 02:23:35 | INFO     | app.core.startup_validator | 
+====================================================================== trace=-
+2026-01-24 02:23:35 | INFO     | app.core.startup_validator | Configuration validation failed, please check the above items trace=-
+2026-01-24 02:23:35 | INFO     | app.core.startup_validator | Configuration guide: docs/configuration_guide.md trace=-
+2026-01-24 02:23:35 | INFO     | app.core.startup_validator | ======================================================================
+ trace=-
+2026-01-24 02:23:35 | ERROR    | app.main | 閰嶇疆楠岃瘉澶辫触: 閰嶇疆楠岃瘉澶辫触:
+  鈥?缂哄皯蹇呴渶閰嶇疆: MONGODB_HOST, MONGODB_PORT, REDIS_HOST, REDIS_PORT
+
+璇锋鏌?.env 鏂囦欢骞跺弬鑰?docs/configuration_guide.md trace=-
+2026-01-24 02:23:35 | ERROR    | uvicorn.error | Traceback (most recent call last):
+  File "/home/appuser/.local/lib/python3.10/site-packages/starlette/routing.py", line 694, in lifespan
+    async with self.lifespan_context(app) as maybe_state:
+  File "/usr/local/lib/python3.10/contextlib.py", line 199, in __aenter__
+    return await anext(self.gen)
+  File "/home/appuser/.local/lib/python3.10/site-packages/fastapi/routing.py", line 153, in merged_lifespan
+    async with original_context(app) as maybe_original_state:
+  File "/usr/local/lib/python3.10/contextlib.py", line 199, in __aenter__
+    return await anext(self.gen)
+  File "/home/appuser/.local/lib/python3.10/site-packages/fastapi/routing.py", line 153, in merged_lifespan
+    async with original_context(app) as maybe_original_state:
+  File "/usr/local/lib/python3.10/contextlib.py", line 199, in __aenter__
+    return await anext(self.gen)
+  File "/home/appuser/.local/lib/python3.10/site-packages/fastapi/routing.py", line 153, in merged_lifespan
+    async with original_context(app) as maybe_original_state:
+  File "/usr/local/lib/python3.10/contextlib.py", line 199, in __aenter__
+    return await anext(self.gen)
+  File "/home/appuser/.local/lib/python3.10/site-packages/fastapi/routing.py", line 153, in merged_lifespan
+    async with original_context(app) as maybe_original_state:
+  File "/usr/local/lib/python3.10/contextlib.py", line 199, in __aenter__
+    return await anext(self.gen)
+  File "/home/appuser/.local/lib/python3.10/site-packages/fastapi/routing.py", line 153, in merged_lifespan
+    async with original_context(app) as maybe_original_state:
+  File "/usr/local/lib/python3.10/contextlib.py", line 199, in __aenter__
+    return await anext(self.gen)
+  File "/home/appuser/.local/lib/python3.10/site-packages/fastapi/routing.py", line 153, in merged_lifespan
+    async with original_context(app) as maybe_original_state:
+  File "/usr/local/lib/python3.10/contextlib.py", line 199, in __aenter__
+    return await anext(self.gen)
+  File "/home/appuser/.local/lib/python3.10/site-packages/fastapi/routing.py", line 153, in merged_lifespan
+    async with original_context(app) as maybe_original_state:
+  File "/usr/local/lib/python3.10/contextlib.py", line 199, in __aenter__
+    return await anext(self.gen)
+  File "/home/appuser/.local/lib/python3.10/site-packages/fastapi/routing.py", line 153, in merged_lifespan
+    async with original_context(app) as maybe_original_state:
+  File "/usr/local/lib/python3.10/contextlib.py", line 199, in __aenter__
+    return await anext(self.gen)
+  File "/home/appuser/.local/lib/python3.10/site-packages/fastapi/routing.py", line 153, in merged_lifespan
+    async with original_context(app) as maybe_original_state:
+  File "/usr/local/lib/python3.10/contextlib.py", line 199, in __aenter__
+    return await anext(self.gen)
+  File "/home/appuser/.local/lib/python3.10/site-packages/fastapi/routing.py", line 153, in merged_lifespan
+    async with original_context(app) as maybe_original_state:
+  File "/usr/local/lib/python3.10/contextlib.py", line 199, in __aenter__
+    return await anext(self.gen)
+  File "/home/appuser/.local/lib/python3.10/site-packages/fastapi/routing.py", line 153, in merged_lifespan
+    async with original_context(app) as maybe_original_state:
+  File "/usr/local/lib/python3.10/contextlib.py", line 199, in __aenter__
+    return await anext(self.gen)
+  File "/home/appuser/.local/lib/python3.10/site-packages/fastapi/routing.py", line 153, in merged_lifespan
+    async with original_context(app) as maybe_original_state:
+  File "/usr/local/lib/python3.10/contextlib.py", line 199, in __aenter__
+    return await anext(self.gen)
+  File "/home/appuser/.local/lib/python3.10/site-packages/fastapi/routing.py", line 153, in merged_lifespan
+    async with original_context(app) as maybe_original_state:
+  File "/usr/local/lib/python3.10/contextlib.py", line 199, in __aenter__
+    return await anext(self.gen)
+  File "/home/appuser/.local/lib/python3.10/site-packages/fastapi/routing.py", line 153, in merged_lifespan
+    async with original_context(app) as maybe_original_state:
+  File "/usr/local/lib/python3.10/contextlib.py", line 199, in __aenter__
+    return await anext(self.gen)
+  File "/home/appuser/.local/lib/python3.10/site-packages/fastapi/routing.py", line 153, in merged_lifespan
+    async with original_context(app) as maybe_original_state:
+  File "/usr/local/lib/python3.10/contextlib.py", line 199, in __aenter__
+    return await anext(self.gen)
+  File "/home/appuser/.local/lib/python3.10/site-packages/fastapi/routing.py", line 153, in merged_lifespan
+    async with original_context(app) as maybe_original_state:
+  File "/usr/local/lib/python3.10/contextlib.py", line 199, in __aenter__
+    return await anext(self.gen)
+  File "/home/appuser/.local/lib/python3.10/site-packages/fastapi/routing.py", line 153, in merged_lifespan
+    async with original_context(app) as maybe_original_state:
+  File "/usr/local/lib/python3.10/contextlib.py", line 199, in __aenter__
+    return await anext(self.gen)
+  File "/home/appuser/.local/lib/python3.10/site-packages/fastapi/routing.py", line 153, in merged_lifespan
+    async with original_context(app) as maybe_original_state:
+  File "/usr/local/lib/python3.10/contextlib.py", line 199, in __aenter__
+    return await anext(self.gen)
+  File "/home/appuser/.local/lib/python3.10/site-packages/fastapi/routing.py", line 153, in merged_lifespan
+    async with original_context(app) as maybe_original_state:
+  File "/usr/local/lib/python3.10/contextlib.py", line 199, in __aenter__
+    return await anext(self.gen)
+  File "/home/appuser/.local/lib/python3.10/site-packages/fastapi/routing.py", line 153, in merged_lifespan
+    async with original_context(app) as maybe_original_state:
+  File "/usr/local/lib/python3.10/contextlib.py", line 199, in __aenter__
+    return await anext(self.gen)
+  File "/home/appuser/.local/lib/python3.10/site-packages/fastapi/routing.py", line 153, in merged_lifespan
+    async with original_context(app) as maybe_original_state:
+  File "/usr/local/lib/python3.10/contextlib.py", line 199, in __aenter__
+    return await anext(self.gen)
+  File "/home/appuser/.local/lib/python3.10/site-packages/fastapi/routing.py", line 153, in merged_lifespan
+    async with original_context(app) as maybe_original_state:
+  File "/usr/local/lib/python3.10/contextlib.py", line 199, in __aenter__
+    return await anext(self.gen)
+  File "/home/appuser/.local/lib/python3.10/site-packages/fastapi/routing.py", line 153, in merged_lifespan
+    async with original_context(app) as maybe_original_state:
+  File "/usr/local/lib/python3.10/contextlib.py", line 199, in __aenter__
+    return await anext(self.gen)
+  File "/home/appuser/.local/lib/python3.10/site-packages/fastapi/routing.py", line 153, in merged_lifespan
+    async with original_context(app) as maybe_original_state:
+  File "/usr/local/lib/python3.10/contextlib.py", line 199, in __aenter__
+    return await anext(self.gen)
+  File "/home/appuser/.local/lib/python3.10/site-packages/fastapi/routing.py", line 153, in merged_lifespan
+    async with original_context(app) as maybe_original_state:
+  File "/usr/local/lib/python3.10/contextlib.py", line 199, in __aenter__
+    return await anext(self.gen)
+  File "/home/appuser/.local/lib/python3.10/site-packages/fastapi/routing.py", line 153, in merged_lifespan
+    async with original_context(app) as maybe_original_state:
+  File "/usr/local/lib/python3.10/contextlib.py", line 199, in __aenter__
+    return await anext(self.gen)
+  File "/home/appuser/.local/lib/python3.10/site-packages/fastapi/routing.py", line 153, in merged_lifespan
+    async with original_context(app) as maybe_original_state:
+  File "/usr/local/lib/python3.10/contextlib.py", line 199, in __aenter__
+    return await anext(self.gen)
+  File "/home/appuser/.local/lib/python3.10/site-packages/fastapi/routing.py", line 153, in merged_lifespan
+    async with original_context(app) as maybe_original_state:
+  File "/usr/local/lib/python3.10/contextlib.py", line 199, in __aenter__
+    return await anext(self.gen)
+  File "/home/appuser/.local/lib/python3.10/site-packages/fastapi/routing.py", line 153, in merged_lifespan
+    async with original_context(app) as maybe_original_state:
+  File "/usr/local/lib/python3.10/contextlib.py", line 199, in __aenter__
+    return await anext(self.gen)
+  File "/home/appuser/.local/lib/python3.10/site-packages/fastapi/routing.py", line 153, in merged_lifespan
+    async with original_context(app) as maybe_original_state:
+  File "/usr/local/lib/python3.10/contextlib.py", line 199, in __aenter__
+    return await anext(self.gen)
+  File "/home/appuser/.local/lib/python3.10/site-packages/fastapi/routing.py", line 153, in merged_lifespan
+    async with original_context(app) as maybe_original_state:
+  File "/usr/local/lib/python3.10/contextlib.py", line 199, in __aenter__
+    return await anext(self.gen)
+  File "/home/appuser/.local/lib/python3.10/site-packages/fastapi/routing.py", line 153, in merged_lifespan
+    async with original_context(app) as maybe_original_state:
+  File "/usr/local/lib/python3.10/contextlib.py", line 199, in __aenter__
+    return await anext(self.gen)
+  File "/home/appuser/.local/lib/python3.10/site-packages/fastapi/routing.py", line 153, in merged_lifespan
+    async with original_context(app) as maybe_original_state:
+  File "/usr/local/lib/python3.10/contextlib.py", line 199, in __aenter__
+    return await anext(self.gen)
+  File "/home/appuser/.local/lib/python3.10/site-packages/fastapi/routing.py", line 153, in merged_lifespan
+    async with original_context(app) as maybe_original_state:
+  File "/usr/local/lib/python3.10/contextlib.py", line 199, in __aenter__
+    return await anext(self.gen)
+  File "/app/app/main.py", line 253, in lifespan
+    validate_startup_config()
+  File "/app/app/core/startup_validator.py", line 327, in validate_startup_config
+    validator.raise_if_failed()
+  File "/app/app/core/startup_validator.py", line 304, in raise_if_failed
+    raise ConfigurationError(
+app.core.startup_validator.ConfigurationError: 閰嶇疆楠岃瘉澶辫触:
+  鈥?缂哄皯蹇呴渶閰嶇疆: MONGODB_HOST, MONGODB_PORT, REDIS_HOST, REDIS_PORT
+
+璇锋鏌?.env 鏂囦欢骞跺弬鑰?docs/configuration_guide.md
+ trace=-
+2026-01-24 02:23:35 | ERROR    | uvicorn.error | Application startup failed. Exiting. trace=-
+2026-01-24 02:23:36 | INFO     | user_service | 鉁?UserService MongoDB 杩炴帴宸插叧闂?trace=-

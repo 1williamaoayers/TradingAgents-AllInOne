@@ -1,0 +1,13 @@
+{
+  "enabled": true,
+  "name": "CLI使用提醒",
+  "description": "快速查看TradingAgents CLI系统的使用方法和常用命令",
+  "version": "1",
+  "when": {
+    "type": "userTriggered"
+  },
+  "then": {
+    "type": "askAgent",
+    "prompt": "请阅读CLI系统使用说明.md文件，并总结以下内容：\n1. Docker环境下运行CLI的正确命令格式\n2. 最常用的3个一键命令示例（港股、A股、美股各一个）\n3. 如何查看分析结果和报告\n4. 容器名称是什么（tradingagents还是ta-app）\n\n请用简洁的格式输出，方便快速查阅。"
+  }
+}

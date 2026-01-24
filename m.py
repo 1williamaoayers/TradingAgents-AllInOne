@@ -1,5 +1,10 @@
 # 文件名: m.py
 import sys
+import io
+# 强制 stdout 使用 utf-8，避免 Windows 下 emoji 报错
+if sys.platform == 'win32':
+    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
+
 from memori import Memori
 
 # 这里是存记忆的地方，默认在当前文件夹生成 memory.db
