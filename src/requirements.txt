@@ -22,7 +22,7 @@ baostock
 finnhub-python
 parsel
 requests
-curl-cffi>=0.6.0  # 模拟真实浏览器TLS指纹，绕过反爬虫检测
+curl-cffi==0.5.10  # 锁定版本以解决 Docker 内 SSL/TLS 连接错误 (curl 35)
 tqdm
 pytz
 redis
