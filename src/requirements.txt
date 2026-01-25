@@ -7,7 +7,7 @@ openai>=1.0.0,<2.0.0
 langchain-openai>=0.1.0
 langchain-experimental
 pandas
-yfinance
+yfinance>=0.2.40
 praw
 feedparser
 stockstats
@@ -22,7 +22,7 @@ baostock
 finnhub-python
 parsel
 requests
-curl-cffi==0.5.10  # 锁定版本以解决 Docker 内 SSL/TLS 连接错误 (curl 35)
+curl-cffi>=0.13.0  # 升级至最新版以通过 Yahoo TLS 指纹验证
 tqdm
 pytz
 redis
