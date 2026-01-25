@@ -97,7 +97,16 @@
   2. ✅ 增加必查项：TaskName/Summary 必须中文 (Added to Rule 0)
   3. ✅ 执行一次标准的中文 UI 任务流程
 
-## TASK 11: 再次确认规则文件中强调中文 UI
+
+## TASK 17: Docker部署问题排查与修复 ✅
+- **状态**: 已完成
+- **目标**: 解决用户部署中的文件权限、港股数据缺失及热更新配置问题。
+- **步骤**:
+  1. ✅ 修复权限: `start.sh` 增加 `config` 目录和 `.env` 文件的 chmod。
+  2. ✅ 修复部署文档: README 增加 Zero-to-Hero 完整命令。
+  3. ✅ 修复港股同步: 修改 `fetch_hk_stocks.py` 适配宿主机/Docker 运行，并建议用户在宿主机运行以规避 Docker 网络限制。
+  4. ✅ 调整部署策略: 回滚 source mount 热更新配置，回归标准的 "Build & Restart" 流程。
+  5. ✅ 规则自查。
 - **状态**: 已完成
 - **目标**: 针对用户已指出的问题，在规则文件中显式加入"Task UI 中文强制检查"条款，确保 TaskName/Status 不再出现英文。
 - **步骤**:
@@ -131,7 +140,38 @@
 16.     - ✅ 单元测试 `test_news_footer.py` 证实 News 脚注动态生成完美。
 17.     - ⚠️ CLI 全流程受阻于外部数据源连接 (Market Data fetch failed)，但代码逻辑已就绪。
 18. - **修复**: 修复了过程中的 `IndentationError` 和 `SyntaxError`。
+
+## TASK 18: 环境重置与清理 ✅
+- **状态**: 已完成
+- **目标**: 清空项目所有容器及数据，包括数据库数据，并执行规则自查。
+- **步骤**:
+  1. ✅ 执行 `docker-compose down -v`
+  2. ✅ 验证容器已移除 (ta-app, ta-redis, ta-mongodb, ta-scraper)
+  3. ✅ 验证卷已移除 (mongodb_data, ta_data, ta_logs)
+  4. ✅ 规则自查
+
+## TASK 19: 模拟小白部署与验证 ✅
+- **状态**: 已完成 (带问题)
+- **目标**: 模拟用户从零部署并验证。
+- **步骤**:
+  1. ✅ 运行 `start.bat` (修复了中文乱码 Bug)。
+  2. ✅ Playwright 验证: 成功添加 `01810`。
+  3. ❌ **发现问题**: 港股名称无法显示 (即使同步后)。
+- **产出**: 
+  - 修复了 `start.bat`。
+  - 创建了 `问题.md` 记录 Bug。
+
 19.
+## TASK 20: 清理测试脚本与生成数据 (Cleanup & Static Data) ✅
+- **状态**: 已完成
+- **目标**: 清理宿主机临时脚本，并在容器内生成港股名称静态文件，解决无脚本环境下的数据缺失问题。
+- **步骤**:
+  1. ✅ 扫描并删除 verify_*.py 及临时脚本 (src/scripts cleaned)
+  2. ✅ 容器内/本地生成 `hk_stocks_fallback.json` (2600+ 股票)
+  3. ✅ 修复容器内文件布局:
+     - Code: `src/web/pages/3_自选股管理.py` -> `/app/web/pages/`
+     - Data: `hk_stocks_fallback.json` -> `/app/data/`
+  4. ✅ 规则自查
 
 
 
@@ -143,3 +183,17 @@
 
 
 
+
+
+## TASK 21: 记录 Agent 卡死诊断结果 ✅
+- **状态**: 进行中
+- **目标**: 将上一轮会话因 `Invoke-WebRequest` 导致的 Agent 卡死/报错问题记录到 `问题.md`，作为已知缺陷提醒后续开发避坑。
+- **步骤**:
+  1. [x] 诊断原因 (Invoke-WebRequest is fragile on Windows)
+  2. [x] 写入 `问题.md`
+
+## TASK 22: 记录 Windows Docker 挂载失效问题 ✅
+- **状态**: 已完成
+- **目标**: 记录 `docker-compose` 挂载在 Windows 下失效导致配置不同步的问题。
+- **原因**: Windows 文件句柄锁定或 Inode 变更导致 Docker bind mount 断开。
+- **解决方案**: 弃用文件同步，强制开启 `USE_MONGODB_STORAGE=true`。

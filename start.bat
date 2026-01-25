@@ -32,7 +32,7 @@ docker-compose up -d
 
 echo ---------------------------------------------------
 echo [SUCCESS] 服务启动成功！
-echo 请访问: http://localhost:8501
+echo Please visit: http://localhost:8501
 echo 初始账号: admin
 echo 初始密码: admin123
 echo ---------------------------------------------------

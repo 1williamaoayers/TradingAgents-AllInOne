@@ -24,7 +24,7 @@
 
 **方式 A：直接下载 (适合有图形界面的电脑)**
 1. [docker-compose.yml](https://github.com/1williamaoayers/TradingAgents-AllInOne/blob/dev/docker-compose.yml)
-2. [.env](https://github.com/1williamaoayers/TradingAgents-AllInOne/blob/dev/.env) (仅包含基础配置，直接使用)
+2. [.env.example](https://github.com/1williamaoayers/TradingAgents-AllInOne/blob/dev/.env.example) (下载后请重命名为 `.env`)
 
 **方式 B：SSH 终端一键生成 (适合 VPS/云服务器)**
 *复制下方整段命令，在终端粘贴回车即可：*
@@ -36,7 +36,7 @@ mkdir -p trading-agents && cd trading-agents
 # 2. 下载配置文件 (使用 GitHub 源)
 # 如果服务器无法访问 GitHub，请确保已配置网络环境
 curl -o docker-compose.yml https://raw.githubusercontent.com/1williamaoayers/TradingAgents-AllInOne/dev/docker-compose.yml
-curl -o .env https://raw.githubusercontent.com/1williamaoayers/TradingAgents-AllInOne/dev/.env
+curl -o .env https://raw.githubusercontent.com/1williamaoayers/TradingAgents-AllInOne/dev/.env.example
 
 # 3. 启动服务
 docker-compose up -d

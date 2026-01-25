@@ -16,10 +16,13 @@ alwaysApply: true
 - **TODO.md** (User View): 秒级同步。
 - **notes.md** (Agent View): 记录过程。
 
+
 ### 6. 🛡️ 工具安全协议 (TOOL SAFETY)
 - **禁止终端写入**: 严禁使用 `run_command` 执行 `Add-Content`, `echo`, `printf` 等写入文件的操作。
 - **强制原生工具**: 必须使用 `write_to_file` 或 `replace_file_content` 进行文件修改。
-- **原因**: 终端写入会触发安全弹窗，打断用户心流。违者必究。
+- **禁止 PowerShell Web请求**: 严禁使用 `Invoke-WebRequest` / `curl` (PowerShell alias) / `wget` 进行连通性检查。
+- **推荐替代**: 使用 `netstat` 或 Python `socket` (如 `src/scripts/check_port.py`)。
+- **原因**: 终端写入会触发安全弹窗；Web请求受限于 Win 兼容性。违者必究。
 
 ### 7. ⏳ 防卡死协议 (ANTI-FREEZE)
 **核心原则**: 放弃主观预测，强制执行**分批标准 (Batch Standards)**。
@@ -40,6 +43,7 @@ alwaysApply: true
 ## 3. 验证锁 (VERIFICATION LOCK)
 - **禁止**将来时 / 无证据打勾。
 - **必须**拿到 Log/Screenshot。
+- **禁止测试脚本锁 (NO TEST SCRIPT LOCK)**: 严禁创建临时测试脚本 (verify_*.py) 作为交付物或验证条件。验证必须基于真实环境 (Docker/App) 的直接指征。
 
 ## 4. 存档协议 (END PROTOCOL)
 - **触发**: "暂停" / "下班" / "存档"
