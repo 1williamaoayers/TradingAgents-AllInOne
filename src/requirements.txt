@@ -22,7 +22,7 @@ baostock
 finnhub-python
 parsel
 requests
-curl-cffi>=0.13.0  # 升级至最新版以通过 Yahoo TLS 指纹验证
+
 tqdm
 pytz
 redis
