@@ -469,6 +469,7 @@ class UnifiedNewsAnalyzer:
 
             # 查询最近30天的新闻（扩大时间范围）
             thirty_days_ago = datetime.now() - timedelta(days=30)
+            thirty_days_ago_str = thirty_days_ago.strftime("%Y-%m-%d %H:%M:%S")
 
             # 🔥 改进：构建关键词列表（支持内容相关性查询）
             keywords = [stock_code, clean_code]
@@ -498,17 +499,38 @@ class UnifiedNewsAnalyzer:
             news_items = []
             seen_titles = set()  # 用于去重
             
+            # 构造混合时间查询条件 (支持 Date 和 String)
+            time_filter = {
+                '$or': [
+                    {'publish_time': {'$gte': thirty_days_ago}},        # Date 类型
+                    {'publish_time': {'$gte': thirty_days_ago_str}}     # String 类型 (字典序比较)
+                ]
+            }
+
             # 定义查询条件（按优先级排序）
+            # 注意: pymongo 中 $and 是隐式的，但与 $or 结合时需小心
             specific_queries = [
                 # 优先级1: 精确匹配symbol + 时间范围（最相关）
-                {'symbol': clean_code, 'publish_time': {'$gte': thirty_days_ago}},
-                {'symbol': stock_code, 'publish_time': {'$gte': thirty_days_ago}},
+                {
+                    'symbol': clean_code, 
+                    **time_filter
+                },
+                {
+                    'symbol': stock_code, 
+                    **time_filter
+                },
                 
                 # 优先级2: 标题包含关键词 + 时间范围
-                {'title': {'$regex': keyword_pattern, '$options': 'i'}, 'publish_time': {'$gte': thirty_days_ago}},
+                {
+                    'title': {'$regex': keyword_pattern, '$options': 'i'}, 
+                    **time_filter
+                },
                 
                 # 优先级3: 内容包含关键词 + 时间范围
-                {'content': {'$regex': keyword_pattern, '$options': 'i'}, 'publish_time': {'$gte': thirty_days_ago}},
+                {
+                    'content': {'$regex': keyword_pattern, '$options': 'i'}, 
+                    **time_filter
+                },
                 
                 # 优先级4: 精确匹配symbol（不限时间，历史新闻）
                 {'symbol': clean_code},
