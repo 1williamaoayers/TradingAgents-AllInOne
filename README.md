@@ -24,7 +24,7 @@
 
 **方式 A：直接下载 (适合有图形界面的电脑)**
 1. [docker-compose.yml](https://github.com/1williamaoayers/TradingAgents-AllInOne/blob/dev/docker-compose.yml)
-2. [.env.example](https://github.com/1williamaoayers/TradingAgents-AllInOne/blob/dev/.env.example) (下载后重命名为 `.env`)
+2. [.env](https://github.com/1williamaoayers/TradingAgents-AllInOne/blob/dev/.env) (仅包含基础配置，直接使用)
 
 **方式 B：SSH 终端一键生成 (适合 VPS/云服务器)**
 *复制下方整段命令，在终端粘贴回车即可：*
