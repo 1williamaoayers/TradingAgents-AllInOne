@@ -35,12 +35,17 @@ mkdir -p trading-agents && cd trading-agents
 
 # 2. 下载配置文件 (使用 GitHub 源)
 # 如果服务器无法访问 GitHub，请确保已配置网络环境
+# 注意：该命令会将 .env.example 下载并重命名为 .env，这就是您的主配置文件
 curl -o docker-compose.yml https://raw.githubusercontent.com/1williamaoayers/TradingAgents-AllInOne/dev/docker-compose.yml
 curl -o .env https://raw.githubusercontent.com/1williamaoayers/TradingAgents-AllInOne/dev/.env.example
 
 # 3. 启动服务
 docker-compose up -d
 ```
+
+> **💡 配置说明**: 
+> 启动后请直接在浏览器访问 `http://localhost:8501` -> **"配置管理"** 页面。
+> 您在网页填写的 API Key 会**自动保存**回到这个 `.env` 文件中，并且同步到数据库，确保重启不丢失。
 
 ### 2. 启动服务
 在文件夹内打开终端（Windows 用户按住 Shift 右键选择"在终端打开"），运行：
