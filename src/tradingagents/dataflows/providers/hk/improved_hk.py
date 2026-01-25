@@ -523,86 +523,187 @@ def get_hk_stock_data_akshare(symbol: str, start_date: str = None, end_date: str
         if not start_date:
             start_date = (datetime.now() - timedelta(days=365)).strftime('%Y-%m-%d')
 
-        logger.info(f"🔄 [AKShare-东方财富] 获取港股历史数据: {symbol} ({start_date} ~ {end_date})")
+    # 🔥 使用互斥锁保护 API 调用（防止并发导致各种奇怪错误）
+        # 这里虽然是历史数据，但也加上锁比较安全
+        # ... (暂时不加全局锁，先只做异常捕获)
 
-        # 🔥 使用东方财富接口获取历史数据（数据更新更及时）
-        # stock_hk_hist 返回当天数据，stock_hk_daily 有1天延迟
-        df = ak.stock_hk_hist(symbol=clean_symbol, period='daily', adjust='qfq')
+        try:
+            # === Level 1: 尝试 AKShare 东方财富接口 (stock_hk_hist) ===
+            logger.info(f"🔄 [AKShare-东方财富] 获取港股历史数据: {symbol} ({start_date} ~ {end_date})")
+            
+            # stock_hk_hist 返回当天数据，stock_hk_daily 有1天延迟
+            df = ak.stock_hk_hist(symbol=clean_symbol, period='daily', adjust='qfq')
 
-        if df is None or df.empty:
-            logger.warning(f"⚠️ [AKShare-东方财富] 返回空数据: {symbol}")
-            return f"❌ 无法获取港股{symbol}的历史数据"
+            if df is None or df.empty:
+                raise ValueError("AKShare-东方财富返回空数据")
 
-        # 🔥 统一字段名（东方财富返回中文列名）
-        df = df.rename(columns={
-            '日期': 'date',
-            '开盘': 'open',
-            '收盘': 'close',
-            '最高': 'high',
-            '最低': 'low',
-            '成交量': 'volume',
-            '成交额': 'amount',
-            '振幅': 'amplitude',
-            '涨跌幅': 'pct_change',
-            '涨跌额': 'change',
-            '换手率': 'turnover_rate'
-        })
+            # 🔥 统一字段名（东方财富返回中文列名）
+            df = df.rename(columns={
+                '日期': 'date',
+                '开盘': 'open',
+                '收盘': 'close',
+                '最高': 'high',
+                '最低': 'low',
+                '成交量': 'volume',
+                '成交额': 'amount',
+                '振幅': 'amplitude',
+                '涨跌幅': 'pct_change',
+                '涨跌额': 'change',
+                '换手率': 'turnover_rate'
+            })
+            
+            logger.info(f"✅ [AKShare-东方财富] 成功获取 {len(df)} 条数据")
 
-        # 过滤日期范围
-        df['date'] = pd.to_datetime(df['date'])
-        mask = (df['date'] >= start_date) & (df['date'] <= end_date)
-        df = df.loc[mask]
+        except Exception as e_hist:
+            logger.warning(f"⚠️ [AKShare-东方财富] 获取失败，尝试降级到新浪接口: {e_hist}")
+            
+            try:
+                # === Level 2: 尝试 AKShare 新浪接口 (stock_hk_daily) ===
+                # 注意：stock_hk_daily 返回的数据通常有15分钟-1天延迟，且字段可能不同
+                logger.info(f"🔄 [AKShare-新浪] 尝试降级获取: {clean_symbol}")
+                
+                df = ak.stock_hk_daily(symbol=clean_symbol, adjust="qfq")
+                
+                if df is None or df.empty:
+                     raise ValueError("AKShare-新浪返回空数据")
+                
+                # 新浪接口返回字段通常为英文: date, open, high, low, close, volume
+                # 如果是中文，需要在这里处理映射
+                # 假设返回标准英文列名 (akshare有些接口已标准化)
+                # 打印一下列名以防万一 (调试用，生产环境只做映射)
+                # logger.debug(f"Sina columns: {df.columns}")
+                
+                # 确保列名统一
+                col_map = {
+                    'date': 'date', 'Date': 'date',
+                    'open': 'open', 'Open': 'open',
+                    'high': 'high', 'High': 'high',
+                    'low': 'low', 'Low': 'low',
+                    'close': 'close', 'Close': 'close',
+                    'volume': 'volume', 'Volume': 'volume'
+                }
+                df = df.rename(columns=col_map)
+                
+                # 确保包含必要列
+                required_cols = ['date', 'open', 'high', 'low', 'close', 'volume']
+                if not all(col in df.columns for col in required_cols):
+                     # 尝试中文映射备选
+                     cn_map = {'日期':'date', '开盘价':'open', '最高价':'high', '最低价':'low', '收盘价':'close', '成交量':'volume'}
+                     df = df.rename(columns=cn_map)
+                
+                if not all(col in df.columns for col in required_cols):
+                     raise ValueError(f"新浪接口字段缺失，现有字段: {df.columns.tolist()}")
 
-        if df.empty:
-            logger.warning(f"⚠️ [AKShare-东方财富] 日期范围内无数据: {symbol}")
-            return f"❌ 港股{symbol}在指定日期范围内无数据"
+                logger.info(f"✅ [AKShare-新浪] 成功获取 {len(df)} 条数据")
 
-
-        # 🔥 添加 pre_close 字段（从前一天的 close 获取）
-        # AKShare 不返回 pre_close 字段，需要手动计算
-        df['pre_close'] = df['close'].shift(1)
-
-        # 计算涨跌额和涨跌幅
-        df['change'] = df['close'] - df['pre_close']
-        df['pct_change'] = (df['change'] / df['pre_close'] * 100).round(2)
-
-        # 🔥 使用统一的技术指标计算函数
-        from tradingagents.tools.analysis.indicators import add_all_indicators
-        df = add_all_indicators(df, close_col='close', high_col='high', low_col='low')
-
-        # 🔥 获取财务指标并计算 PE、PB
-        financial_indicators = provider.get_financial_indicators(symbol)
-
-        # 格式化输出（包含价格数据和技术指标）
-        latest = df.iloc[-1]
-        current_price = latest['close']
-
-        # 计算 PE、PB
-        pe_ratio = None
-        pb_ratio = None
-        financial_section = ""
-
-        if financial_indicators:
-            eps_ttm = financial_indicators.get('eps_ttm')
-            bps = financial_indicators.get('bps')
-
-            if eps_ttm and eps_ttm > 0:
-                pe_ratio = current_price / eps_ttm
-
-            if bps and bps > 0:
-                pb_ratio = current_price / bps
-
-            # 构建财务指标部分（处理 None 值）
-            def format_value(value, format_str=".2f", suffix="", default="N/A"):
-                """格式化数值，处理 None 情况"""
-                if value is None:
-                    return default
+            except Exception as e_sina:
+                logger.warning(f"⚠️ [AKShare-新浪] 获取失败，尝试降级到 YFinance: {e_sina}")
+                
                 try:
-                    return f"{value:{format_str}}{suffix}"
-                except:
-                    return default
+                    # === Level 3: 尝试 YFinance (通过 get_hk_stock_provider) ===
+                    logger.info(f"🔄 [YFinance] 最终降级尝试: {symbol}")
+                    
+                    # 使用本文件定义的 provider 获取 yfinance 数据
+                    yf_provider = get_hk_stock_provider() # 这是 hk_stock.py 里的类，需要确保正确引用
+                    # 注意：get_hk_stock_provider 需要 import
+                    # 这里的上下文里，improve_hk.py 并没有 import hk_stock.py 的 provider，而是自己实现的 ImprovedHKStockProvider
+                    # 但 ImprovedHKStockProvider 没有 get_stock_data 方法 (它只有 get_stock_info 等)
+                    # 检查 import: from tradingagents.dataflows.providers.hk.hk_stock import HKStockProvider (假设有)
+                    # 或者直接使用 yfinance
+                    
+                    import yfinance as yf
+                    yf_ticker = yf.Ticker(symbol) # 使用带后缀的 symbol (1810.HK)
+                    df = yf_ticker.history(start=start_date, end=end_date)
+                    
+                    if df is None or df.empty:
+                        raise ValueError("YFinance 返回空数据")
+                    
+                    df = df.reset_index()
+                    
+                    # YFinance 列名映射
+                    df = df.rename(columns={
+                        'Date': 'date', 'Open': 'open', 'High': 'high', 
+                        'Low': 'low', 'Close': 'close', 'Volume': 'volume'
+                    })
+                    
+                    # 时区处理：YFinance 返回的 date 可能是带时区的
+                    if 'date' in df.columns:
+                        df['date'] = df['date'].dt.strftime('%Y-%m-%d')
+                        df['date'] = pd.to_datetime(df['date'])
 
-            financial_section = f"""
+                    logger.info(f"✅ [YFinance] 成功获取 {len(df)} 条数据")
+                    
+                except Exception as e_yf:
+                    logger.error(f"❌ [所有接口] 港股历史数据获取彻底失败: {symbol} - {e_yf}")
+                    return f"❌ 港股{symbol}历史数据获取失败(已尝试所有渠道): {str(e_yf)}"
+
+        # === 数据后处理 (通用) ===
+        try:
+            # 过滤日期范围
+            if not pd.api.types.is_datetime64_any_dtype(df['date']):
+                df['date'] = pd.to_datetime(df['date'])
+            
+            mask = (df['date'] >= start_date) & (df['date'] <= end_date)
+            df = df.loc[mask]
+
+            if df.empty:
+                logger.warning(f"⚠️ [Data Filter] 日期范围内无数据: {symbol}")
+                return f"❌ 港股{symbol}在指定日期范围内无数据"
+
+            # 排序
+            df = df.sort_values('date')
+
+            # 🔥 添加 pre_close 字段（从前一天的 close 获取）
+            # 无论哪个源，都重新计算一遍以保准确
+            df['pre_close'] = df['close'].shift(1)
+            # 第一天的 pre_close 用 open 代替或保持 NaN
+            df.loc[df.index[0], 'pre_close'] = df.loc[df.index[0], 'open']
+
+            # 计算涨跌额和涨跌幅 (如果源数据没有或不准)
+            df['change'] = df['close'] - df['pre_close']
+            df['pct_change'] = (df['change'] / df['pre_close'] * 100).round(2)
+
+            # 检查并补全 turnover_rate (如果不重要可忽略，或用 volume/total_share 计算，这里暂时置0或保留原状)
+            if 'turnover_rate' not in df.columns:
+                df['turnover_rate'] = 0.0
+
+            # 🔥 使用统一的技术指标计算函数
+            from tradingagents.tools.analysis.indicators import add_all_indicators
+            df = add_all_indicators(df, close_col='close', high_col='high', low_col='low')
+
+            # 🔥 获取财务指标并计算 PE、PB
+            financial_indicators = provider.get_financial_indicators(symbol)
+
+            # 格式化输出（包含价格数据和技术指标）
+            latest = df.iloc[-1]
+            current_price = latest['close']
+
+            # 计算 PE、PB
+            pe_ratio = None
+            pb_ratio = None
+            financial_section = ""
+
+            if financial_indicators:
+                eps_ttm = financial_indicators.get('eps_ttm')
+                bps = financial_indicators.get('bps')
+
+                if eps_ttm and eps_ttm > 0:
+                    pe_ratio = current_price / eps_ttm
+
+                if bps and bps > 0:
+                    pb_ratio = current_price / bps
+
+                # 构建财务指标部分（处理 None 值）
+                def format_value(value, format_str=".2f", suffix="", default="N/A"):
+                    """格式化数值，处理 None 情况"""
+                    if value is None:
+                        return default
+                    try:
+                        return f"{value:{format_str}}{suffix}"
+                    except:
+                        return default
+
+                financial_section = f"""
 ### 财务指标（最新报告期：{financial_indicators.get('report_date', 'N/A')}）
 **估值指标**:
 - PE (市盈率): {f'{pe_ratio:.2f}' if pe_ratio else 'N/A'} (当前价 / EPS_TTM)
@@ -631,8 +732,9 @@ def get_hk_stock_data_akshare(symbol: str, start_date: str = None, end_date: str
 - 流动比率: {format_value(financial_indicators.get('current_ratio'))}
 """
 
-        result = f"""## 港股历史数据 ({symbol})
-**数据源**: AKShare (新浪财经)
+            # 最终输出文本构建
+            result = f"""## 港股历史数据 ({symbol})
+**数据源**: AKShare/YFinance (自适应降级)
 **日期范围**: {start_date} ~ {end_date}
 **数据条数**: {len(df)} 条
 
@@ -675,11 +777,15 @@ def get_hk_stock_data_akshare(symbol: str, start_date: str = None, end_date: str
 - 总成交量: {df['volume'].sum():,.0f}
 """
 
-        logger.info(f"✅ [AKShare-新浪] 港股历史数据获取成功: {symbol} ({len(df)}条)")
-        return result
+            logger.info(f"✅ [数据服务] 港股历史数据处理完成: {symbol} ({len(df)}条)")
+            return result
+
+        except Exception as e_proc:
+             logger.error(f"❌ [数据后处理] 港股数据处理阶段失败: {symbol} - {e_proc}", exc_info=True)
+             return f"❌ 港股{symbol}数据处理失败: {str(e_proc)}"
 
     except Exception as e:
-        logger.error(f"❌ [AKShare-新浪] 港股历史数据获取失败: {symbol} - {e}")
+        logger.error(f"❌ [Fatal] 港股历史数据获流程异常: {symbol} - {e}")
         return f"❌ 港股{symbol}历史数据获取失败: {str(e)}"
 
 

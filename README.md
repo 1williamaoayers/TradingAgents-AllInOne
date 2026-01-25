@@ -38,7 +38,10 @@ mkdir -p trading-agents && cd trading-agents
 curl -o docker-compose.yml https://raw.githubusercontent.com/1williamaoayers/TradingAgents-AllInOne/dev/docker-compose.yml
 curl -o .env https://raw.githubusercontent.com/1williamaoayers/TradingAgents-AllInOne/dev/.env.example
 
-# 3. 启动服务
+# 3. 设置权限 (防止权限问题导致配置无法保存)
+chmod 666 .env
+
+# 4. 启动服务
 docker-compose up -d
 ```
 
