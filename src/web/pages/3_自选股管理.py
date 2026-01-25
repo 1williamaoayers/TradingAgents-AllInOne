@@ -139,8 +139,54 @@ def add_stock_to_db(symbol, market):
                 if basic:
                     stock_name = basic.get('name', symbol)
                     print(f"[DEBUG] 从基础信息获取: {symbol} -> {stock_name}")
+                    print(f"[DEBUG] 从基础信息获取: {symbol} -> {stock_name}")
                 else:
-                    print(f"[DEBUG] 缓存和基础表均未找到，使用代码: {symbol}")
+                    # 🔥 [增强 1] 本地 JSON 兜底 (Top 200+)
+                    try:
+                        import json
+                        from pathlib import Path
+                        # 路径: src/web/pages/../../data/hk_stocks_fallback.json
+                        json_path = Path(__file__).parent.parent.parent / "data" / "hk_stocks_fallback.json"
+                        if json_path.exists():
+                            with open(json_path, 'r', encoding='utf-8') as f:
+                                fallback_data = json.load(f)
+                                # 尝试匹配 (支持带后缀或纯数字)
+                                simple_code = clean_symbol
+                                if simple_code in fallback_data:
+                                    stock_name = fallback_data[simple_code]
+                                    print(f"[DEBUG] 从本地 JSON 获取: {symbol} -> {stock_name}")
+                    except Exception as fj:
+                        print(f"[WARNING] 本地 JSON 读取失败: {fj}")
+
+                    # 🔥 [增强 2] Yfinance 实时兜底 (最后一搏)
+                    if stock_name == symbol: # 如果还没找到
+                        try:
+                            import yfinance as yf
+                            
+                            # 转换代码格式
+                            yf_symbol = symbol
+                            if market == "港股" and not symbol.endswith(".HK") and symbol.isdigit():
+                                yf_symbol = f"{symbol}.HK"
+                            elif market == "A股":
+                                if symbol.startswith("60") and not symbol.endswith(".SS"):
+                                    yf_symbol = f"{symbol}.SS"
+                                elif (symbol.startswith("00") or symbol.startswith("30")) and not symbol.endswith(".SZ"):
+                                    yf_symbol = f"{symbol}.SZ"
+                                    
+                            print(f"[DEBUG] 尝试 Yfinance: {yf_symbol}")
+                            ticker = yf.Ticker(yf_symbol)
+                            info = ticker.info
+                            # 优先取 longName, 其次 shortName
+                            yf_name = info.get('longName') or info.get('shortName')
+                            if yf_name:
+                                # 如果是英文名称，尝试简单翻译(可选)或直接使用
+                                stock_name = yf_name
+                                print(f"[DEBUG] 从 Yfinance 获取: {symbol} -> {stock_name}")
+                        except Exception as ey:
+                            print(f"[WARNING] Yfinance 获取失败: {ey}")
+
+                    if stock_name == symbol:
+                         print(f"[DEBUG] 所有方法均未找到，使用代码: {symbol}")
         except Exception as e:
             print(f"[WARNING] 缓存查询失败: {e}")
         
