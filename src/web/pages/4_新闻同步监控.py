@@ -9,6 +9,12 @@ from datetime import datetime, timedelta, timezone
 import plotly.express as px
 from pymongo import MongoClient
 import os
+import sys
+from pathlib import Path
+
+# 添加项目路径
+project_root = Path(__file__).parent.parent.parent
+sys.path.insert(0, str(project_root))
 
 # 北京时区 (UTC+8)
 BEIJING_TZ = timezone(timedelta(hours=8))
@@ -405,6 +411,211 @@ try:
         )
     else:
         st.info("暂无同步历史记录")
+    
+    st.markdown("---")
+    
+    # ========== 沽空数据区块 ==========
+    st.subheader("📉 港股沽空数据")
+    
+    # 沽空数据操作按钮
+    col_short_refresh, col_short_sync, col_short_empty = st.columns([1, 1.5, 6])
+    
+    with col_short_refresh:
+        short_refresh = st.button("🔄 刷新", key="short_refresh", use_container_width=True)
+    
+    with col_short_sync:
+        if st.button("📥 同步今日沽空", use_container_width=True, help="从东方财富获取今日沽空数据"):
+            with st.spinner("正在获取沽空数据..."):
+                try:
+                    # 动态导入沽空模块
+                    from tradingagents.dataflows.providers.hk.short_selling import HKShortSellingProvider
+                    
+                    provider = HKShortSellingProvider()
+                    provider.set_mongodb_client(get_mongo_client())
+                    
+                    # 获取今日数据
+                    today = datetime.now().strftime("%Y-%m-%d")
+                    records = provider.fetch_daily_data(today)
+                    
+                    if records:
+                        st.success(f"✅ 获取到 {len(records)} 条沽空记录")
+                        st.rerun()
+                    else:
+                        st.warning("⚠️ 今日暂无沽空数据（可能是非交易日）")
+                except Exception as e:
+                    st.error(f"❌ 获取失败: {str(e)}")
+    
+    # 获取沽空统计数据
+    try:
+        db = get_db()
+        
+        # 查询最新沽空数据日期
+        latest_short = db.short_selling.find_one({}, sort=[("date", -1)])
+        latest_short_date = latest_short.get("date", "无数据") if latest_short else "无数据"
+        
+        # 统计沽空记录总数
+        total_short_records = db.short_selling.count_documents({})
+        
+        # 统计有沽空数据的日期数
+        short_dates = db.short_selling.distinct("date")
+        total_short_days = len(short_dates)
+        
+        # 显示沽空统计
+        col_s1, col_s2, col_s3, col_s4 = st.columns(4)
+        
+        with col_s1:
+            st.metric("沽空记录总数", f"{total_short_records:,}")
+        
+        with col_s2:
+            st.metric("数据天数", total_short_days)
+        
+        with col_s3:
+            st.metric("最新数据日期", latest_short_date)
+        
+        with col_s4:
+            # 计算自选股中港股数量
+            hk_watchlist = []
+            for doc in db.user_favorites.find({}):
+                for fav in doc.get("favorites", []):
+                    if fav.get("market") == "港股":
+                        hk_watchlist.append(fav.get("stock_code"))
+            st.metric("港股自选股", len(hk_watchlist))
+        
+        # 如果有沽空数据，显示自选股沽空详情
+        if total_short_records > 0 and latest_short_date != "无数据" and hk_watchlist:
+                st.markdown("##### ⭐ 自选股沽空数据")
+                
+                # 标准化代码格式
+                normalized_codes = [code.replace(".HK", "").zfill(5) for code in hk_watchlist]
+                
+                watchlist_shorts = list(db.short_selling.find({
+                    "date": latest_short_date,
+                    "stock_code": {"$in": normalized_codes}
+                }).sort("short_ratio", -1))
+                
+                if watchlist_shorts:
+                    watchlist_data = []
+                    for item in watchlist_shorts:
+                        ratio = item.get("short_ratio", 0) * 100
+                        # 风险标记
+                        if ratio > 20:
+                            risk = "🔴 高"
+                        elif ratio > 10:
+                            risk = "🟡 中"
+                        else:
+                            risk = "🟢 低"
+                        
+                        watchlist_data.append({
+                            "代码": item.get("stock_code", ""),
+                            "名称": item.get("stock_name", ""),
+                            "沽空比例": f"{ratio:.2f}%",
+                            "沽空金额": f"${item.get('short_value', 0)/1e6:.1f}M",
+                            "风险": risk
+                        })
+                    
+                    df_watchlist = pd.DataFrame(watchlist_data)
+                    st.dataframe(df_watchlist, hide_index=True, use_container_width=True)
+                    
+                    # 为每只股票显示沽空走势图
+                    st.markdown("##### 📈 沽空走势图")
+                    
+                    # 选择要查看的股票
+                    stock_options = {f"{item.get('stock_code')} {item.get('stock_name', '')}": item.get('stock_code') 
+                                     for item in watchlist_shorts}
+                    
+                    selected_stock_display = st.selectbox(
+                        "选择股票查看走势",
+                        options=list(stock_options.keys()),
+                        key="short_stock_select"
+                    )
+                    
+                    if selected_stock_display:
+                        selected_code = stock_options[selected_stock_display]
+                        
+                        # 获取该股票最近60天的沽空历史
+                        history_data = list(db.short_selling.find({
+                            "stock_code": selected_code
+                        }).sort("date", 1).limit(60))
+                        
+                        if len(history_data) >= 2:
+                            # 准备图表数据
+                            dates = [item.get("date") for item in history_data]
+                            ratios = [item.get("short_ratio", 0) * 100 for item in history_data]
+                            shares = [item.get("short_shares", 0) / 10000 for item in history_data]  # 万股
+                            
+                            # 创建双轴图表
+                            from plotly.subplots import make_subplots
+                            import plotly.graph_objects as go
+                            
+                            fig = make_subplots(
+                                rows=2, cols=1,
+                                shared_xaxes=True,
+                                vertical_spacing=0.1,
+                                row_heights=[0.7, 0.3],
+                                subplot_titles=("沽空比例 (%)", "沽空数量 (万股)")
+                            )
+                            
+                            # 上图：沽空比例折线
+                            fig.add_trace(
+                                go.Scatter(
+                                    x=dates, 
+                                    y=ratios, 
+                                    mode='lines+markers',
+                                    name='沽空比例',
+                                    line=dict(color='#1E90FF', width=2),
+                                    marker=dict(size=4)
+                                ),
+                                row=1, col=1
+                            )
+                            
+                            # 下图：沽空数量柱状图
+                            fig.add_trace(
+                                go.Bar(
+                                    x=dates, 
+                                    y=shares, 
+                                    name='沽空数量',
+                                    marker_color='#1E90FF'
+                                ),
+                                row=2, col=1
+                            )
+                            
+                            # 更新布局
+                            fig.update_layout(
+                                title=f"沽空成交及比例 - {selected_stock_display}",
+                                height=500,
+                                showlegend=True,
+                                legend=dict(orientation="h", yanchor="bottom", y=-0.2, xanchor="center", x=0.5)
+                            )
+                            
+                            fig.update_xaxes(tickangle=-45, row=2, col=1)
+                            fig.update_yaxes(title_text="比例 (%)", row=1, col=1)
+                            fig.update_yaxes(title_text="万股", row=2, col=1)
+                            
+                            st.plotly_chart(fig, use_container_width=True)
+                            
+                            # 显示统计摘要
+                            avg_ratio = sum(ratios) / len(ratios)
+                            max_ratio = max(ratios)
+                            min_ratio = min(ratios)
+                            latest_ratio = ratios[-1] if ratios else 0
+                            
+                            col_stat1, col_stat2, col_stat3, col_stat4 = st.columns(4)
+                            with col_stat1:
+                                st.metric("最新比例", f"{latest_ratio:.2f}%")
+                            with col_stat2:
+                                st.metric("平均比例", f"{avg_ratio:.2f}%")
+                            with col_stat3:
+                                st.metric("最高比例", f"{max_ratio:.2f}%")
+                            with col_stat4:
+                                st.metric("最低比例", f"{min_ratio:.2f}%")
+                        else:
+                            st.info(f"📊 {selected_stock_display} 历史数据不足，需要更多天数的数据才能显示走势图")
+                else:
+                    st.info("自选港股暂无沽空数据")
+        
+    except Exception as e:
+        st.warning(f"⚠️ 沽空数据加载失败: {str(e)}")
+        st.caption("提示：请先点击「同步今日沽空」获取数据")
     
     # 页脚
     st.markdown("---")
