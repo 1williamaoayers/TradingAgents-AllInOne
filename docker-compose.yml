@@ -80,7 +80,7 @@ services:
     volumes:
       - ta_data:/app/data
       - ta_logs:/app/logs
-      - ./.env:/app/.env:ro
+      - ./.env:/app/.env:rw  # 必须是rw，否则Web界面无法保存配置
     env_file:
       - .env
     environment:
