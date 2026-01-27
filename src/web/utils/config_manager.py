@@ -438,9 +438,10 @@ class ConfigManager:
             db = client[os.getenv("MONGODB_DATABASE", "tradingagents")]
             
             # 读取当前环境变量中的API Key
-            deepseek_key = os.getenv("DEEPSEEK_API_KEY", "")
-            dashscope_key = os.getenv("DASHSCOPE_API_KEY", "")
-            openai_key = os.getenv("OPENAI_API_KEY", "")
+            env_vars = self._read_env_file()
+            deepseek_key = env_vars.get("DEEPSEEK_API_KEY", "")
+            dashscope_key = env_vars.get("DASHSCOPE_API_KEY", "")
+            openai_key = env_vars.get("OPENAI_API_KEY", "")
             
             # 构建LLM配置
             llm_configs = []
