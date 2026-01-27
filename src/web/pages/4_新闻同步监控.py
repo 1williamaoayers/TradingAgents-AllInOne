@@ -59,8 +59,9 @@ def get_news_stats():
     yesterday = datetime.utcnow() - timedelta(days=1)
     today_news = db.stock_news.count_documents({"created_at": {"$gte": yesterday}})
     
-    # 自选股数量
-    watchlist_count = db.user_favorites.count_documents({})
+    # 自选股数量 - 统计 favorites 数组长度
+    watchlist_doc = db.user_favorites.find_one({})
+    watchlist_count = len(watchlist_doc.get("favorites", [])) if watchlist_doc else 0
     
     # 最近同步时间
     last_sync = db.news_sync_history.find_one({}, sort=[("sync_time", -1)])
