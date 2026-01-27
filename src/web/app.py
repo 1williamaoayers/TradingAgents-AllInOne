@@ -912,25 +912,14 @@ def main():
     st.components.v1.html(foldable_detect_js, height=0)
 
     # 检查用户认证状态
+    # 登录功能已禁用 - 自动设置为已认证状态
     if not auth_manager.is_authenticated():
-        # 最后一次尝试从session state恢复认证状态
-        if (st.session_state.get('authenticated', False) and 
-            st.session_state.get('user_info') and 
-            st.session_state.get('login_time')):
-            logger.info("🔄 从session state恢复认证状态")
-            try:
-                auth_manager.login_user(
-                    st.session_state.user_info, 
-                    st.session_state.login_time
-                )
-                logger.info(f"✅ 成功从session state恢复用户 {st.session_state.user_info.get('username', 'Unknown')} 的认证状态")
-            except Exception as e:
-                logger.warning(f"⚠️ 从session state恢复认证状态失败: {e}")
-        
-        # 如果仍然未认证，显示登录页面
-        if not auth_manager.is_authenticated():
-            render_login_form()
-            return
+        default_user = {"username": "admin", "role": "admin", "permissions": ["read", "write", "admin", "config", "analysis"]}
+        auth_manager.restore_from_cache(default_user, time.time())
+        st.session_state.authenticated = True
+        st.session_state.user_info = default_user
+        st.session_state.login_time = time.time()
+        logger.info("[自动登录] 已自动设置为管理员用户")
 
     # 全局侧边栏CSS样式 - 确保所有页面一致
     st.markdown("""
