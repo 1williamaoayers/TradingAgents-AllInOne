@@ -99,8 +99,7 @@ services:
   # TradingAgents 主应用
   # ==========================================
   tradingagents:
-    build: .
-    image: tradingagents-fixed:latest
+    image: ghcr.io/1williamaoayers/tradingagents-allinone:dev
     container_name: ta-app
     restart: unless-stopped
     ports:
