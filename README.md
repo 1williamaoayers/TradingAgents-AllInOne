@@ -1,92 +1,80 @@
-# TradingAgents-CN 一键部署版
+# 🚀 TradingAgents All-In-One Deploy
 
-基于多智能体的股票分析系统，支持 A股、港股、美股 综合分析。
+**一键部署 TradingAgents 全套服务**，包含主应用、MongoDB、Redis、RSSHub 和 PlaywriteOCR 爬虫。
 
-## 🚀 快速开始
-
-### 1. 克隆项目
-```bash
-git clone https://github.com/1williamaoayers/TradingAgents-AllInOne.git
-cd TradingAgents-AllInOne
-git checkout dev
-```
-
-### 2. 配置环境变量
-```bash
-cp .env.example .env
-# 编辑 .env 文件，填入你的 API 密钥
-```
-
-### 3. 启动服务
-```bash
-docker compose up -d
-```
-
-### 4. 访问 Web UI
-打开浏览器访问: http://localhost:8501
+专为懒人设计，无需配置网络，无需手动对接。
 
 ---
 
-## 📋 API 密钥申请指南
+## ✨ 特性
 
-| 服务 | 用途 | 申请地址 |
-|------|------|----------|
-| DeepSeek | AI 模型 | https://platform.deepseek.com/ |
-| 阿里云 | AI 模型(备选) | https://dashscope.console.aliyun.com/ |
-| Finnhub | 股票数据 | https://finnhub.io/ |
-| Alpha Vantage | 历史数据 | https://www.alphavantage.co/support/#api-key |
-| Serper | 新闻搜索 | https://serper.dev/ |
+- **全自动编排**：一个命令启动 5 个容器
+- **内置集成**：主应用自动发现爬虫服务
+- **数据持久化**：内置 Volume 自动管理数据
+- **硬件兼容**：MongoDB 4.4 兼容所有 CPU (无AVX也能跑)
+- **架构支持**：完美支持 ARM64 (树莓派/Mac) 和 AMD64
 
 ---
 
-## 🐳 服务架构
+## 🛠️ 极简部署 (推荐)
 
-| 服务 | 端口 | 说明 |
-|------|------|------|
-| tradingagents | 8501 | Web UI (Streamlit) |
-| mongodb | 27017 | 数据存储 |
-| redis | 6379 | 缓存 |
-| rsshub | 1200 | 自建 RSS 服务 |
-| playwriteocr | 9527 | 网页爬虫 |
+**无需代码，无需脚本，无需 Git。**
 
----
+### 1. 准备文件
 
-## 🔧 常用命令
+**方式 A：直接下载 (适合有图形界面的电脑)**
+1. [docker-compose.yml](https://github.com/1williamaoayers/TradingAgents-AllInOne/blob/dev/docker-compose.yml)
+2. [.env.example](https://github.com/1williamaoayers/TradingAgents-AllInOne/blob/dev/.env.example) (下载后请重命名为 `.env`)
+
+**方式 B：SSH 终端一键生成 (适合 VPS/云服务器)**
+*复制下方整段命令，在终端粘贴回车即可：*
 
 ```bash
-# 查看日志
-docker compose logs -f tradingagents
+# 1. 创建并进入目录
+mkdir -p trading-agents && cd trading-agents
 
-# 重启服务
-docker compose restart tradingagents
+# 2. 下载配置文件 (使用 GitHub 源)
+# 如果服务器无法访问 GitHub，请确保已配置网络环境
+curl -o docker-compose.yml https://raw.githubusercontent.com/1williamaoayers/TradingAgents-AllInOne/dev/docker-compose.yml
+curl -o .env https://raw.githubusercontent.com/1williamaoayers/TradingAgents-AllInOne/dev/.env.example
 
-# 停止所有服务
-docker compose down
+# 3. 设置权限 (防止权限问题导致配置无法保存)
+chmod 666 .env
 
-# 清理数据重新开始
-docker compose down -v
+# 4. 启动服务
+docker-compose up -d
 ```
 
----
+> **💡 配置说明**: 
+> 启动后请直接在浏览器访问 `http://localhost:8501` -> **"配置管理"** 页面。
+> 您在网页填写的 API Key 会**自动保存**回到这个 `.env` 文件中，并且同步到数据库，确保重启不丢失。
 
-## ⚠️ 系统要求
+### 2. 启动服务
+在文件夹内打开终端（Windows 用户按住 Shift 右键选择"在终端打开"），运行：
 
-- Docker 20.10+
-- Docker Compose 2.0+
-- 内存: 最低 2GB，推荐 4GB
-- 磁盘: 最低 5GB
+```bash
+docker-compose up -d
+```
 
----
+等待镜像下载完成即可。系统会自动拉取包含最新数据（含港股名称库）的镜像。
 
-## 📝 已知问题与修复
-
-本版本已包含以下修复:
-- ✅ yfinance 港股代码前导0问题
-- ✅ curl_cffi 兼容性问题
-- ✅ 新闻数据源优化
+### 3. 访问
+打开浏览器访问：`http://localhost:8501`
 
 ---
 
-## 📄 License
+## 💾 数据管理
+部署后文件夹内会自动生以下目录，**请勿删除**：
+- `ta_data/`: 应用数据（配置、自选股等）
+- `mongodb_data/`: 数据库文件
+- `redis_data/`: 缓存数据
 
-MIT License
+---
+
+## 🔄 更新方法
+在文件夹内运行：
+```bash
+docker-compose pull
+docker-compose up -d
+```
+系统会自动从云端拉取最新镜像并重启，数据不会丢失。
