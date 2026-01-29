@@ -7,10 +7,12 @@ FROM ghcr.io/1williamaoayers/tradingagents-allinone:dev
 COPY patches/sitecustomize.py /home/appuser/.local/lib/python3.10/site-packages/sitecustomize.py
 COPY patches/tradingagents_init_clean.py /app/tradingagents/__init__.py
 COPY patches/yfinance_news_sync_service_fixed.py /app/app/worker/yfinance_news_sync_service.py
+COPY patches/rss_adapter_fixed.py /app/app/worker/news_adapters/rss_adapter.py
 
 # 确保权限正确
 USER root
 RUN chown appuser:appuser /home/appuser/.local/lib/python3.10/site-packages/sitecustomize.py \
     && chown appuser:appuser /app/tradingagents/__init__.py \
-    && chown appuser:appuser /app/app/worker/yfinance_news_sync_service.py
+    && chown appuser:appuser /app/app/worker/yfinance_news_sync_service.py \
+    && chown appuser:appuser /app/app/worker/news_adapters/rss_adapter.py
 USER appuser
