@@ -63,6 +63,23 @@ RUN mkdir -p /app/data /app/logs /app/cache /app/backups && \
 # 复制应用代码（这是最常变动的层，放在最后）
 COPY --chown=appuser:appuser . .
 
+# ============================================
+# 应用兼容性补丁
+# ============================================
+# sitecustomize.py: 修复 curl_cffi 兼容性问题
+COPY --chown=appuser:appuser patches/sitecustomize.py /home/appuser/.local/lib/python3.10/site-packages/sitecustomize.py
+# tradingagents __init__: 清理版本（不做monkey patch）
+COPY --chown=appuser:appuser patches/tradingagents_init_clean.py /app/tradingagents/__init__.py
+# yfinance新闻同步服务修复
+COPY --chown=appuser:appuser patches/yfinance_news_sync_service_fixed.py /app/app/worker/yfinance_news_sync_service.py
+# 步骤2：删除容器
+COPY --chown=appuser:appuser patches/rss_adapter_fixed.py /app/app/worker/news_adapters/rss_adapter.py
+# Alpha Vantage: 增加限流保护
+COPY --chown=appuser:appuser patches/alpha_vantage_news_fixed.py /app/tradingagents/tools/alpha_vantage_news.py
+# FinnHub: 增加超时和重试机制
+COPY --chown=appuser:appuser patches/finnhub_adapter_fixed.py /app/app/worker/news_adapters/finnhub_adapter.py
+
+
 # 复制初始化脚本并设置权限
 # 注意：虽然COPY . .已经包含了scripts目录，但为了确保权限正确，再次显式设置
 RUN chmod +x /app/scripts/docker-init.sh
