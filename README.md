@@ -1,4 +1,8 @@
-# 🚀 TradingAgents All-In-One Deploy
+# 🚀 TradingAgents All-In-One Deploy (稳定版)
+
+> **📌 稳定分支** - 此为稳定备用分支，使用 `:stable` 镜像
+>
+> 如需最新功能，请使用 [dev 分支](https://github.com/1williamaoayers/TradingAgents-AllInOne/tree/dev)
 
 **一键部署 TradingAgents 全套服务**，包含主应用、MongoDB、Redis 和 PlaywriteOCR 爬虫。
 
@@ -23,8 +27,8 @@
 ### 1. 准备文件
 
 **方式 A：直接下载 (适合有图形界面的电脑)**
-1. [docker-compose.yml](https://github.com/1williamaoayers/TradingAgents-AllInOne/blob/dev/docker-compose.yml)
-2. [.env.example](https://github.com/1williamaoayers/TradingAgents-AllInOne/blob/dev/.env.example) (下载后请重命名为 `.env`)
+1. [docker-compose.yml](https://github.com/1williamaoayers/TradingAgents-AllInOne/blob/stable/docker-compose.yml)
+2. [.env.example](https://github.com/1williamaoayers/TradingAgents-AllInOne/blob/stable/.env.example) (下载后请重命名为 `.env`)
 
 **方式 B：SSH 终端一键生成 (适合 VPS/云服务器)**
 *复制下方整段命令，在终端粘贴回车即可：*
@@ -33,10 +37,10 @@
 # 1. 创建并进入目录
 mkdir -p trading-agents && cd trading-agents
 
-# 2. 下载配置文件 (使用 GitHub 源)
+# 2. 下载配置文件 (使用 stable 分支)
 # 如果服务器无法访问 GitHub，请确保已配置网络环境
-curl -o docker-compose.yml https://raw.githubusercontent.com/1williamaoayers/TradingAgents-AllInOne/dev/docker-compose.yml
-curl -o .env https://raw.githubusercontent.com/1williamaoayers/TradingAgents-AllInOne/dev/.env.example
+curl -o docker-compose.yml https://raw.githubusercontent.com/1williamaoayers/TradingAgents-AllInOne/stable/docker-compose.yml
+curl -o .env https://raw.githubusercontent.com/1williamaoayers/TradingAgents-AllInOne/stable/.env.example
 
 # 3. 设置权限 (防止权限问题导致配置无法保存)
 chmod 666 .env
