@@ -1,8 +1,6 @@
 # 🚀 TradingAgents All-In-One Deploy
 
-**一键部署 TradingAgents 全套服务**，包含主应用、MongoDB、Redis 和 PlaywriteOCR 爬虫。
-
-专为懒人设计，无需配置网络，无需手动对接。
+> **📌 主分支** - 此为开发主分支，使用 `:latest` 镜像
 
 ---
 

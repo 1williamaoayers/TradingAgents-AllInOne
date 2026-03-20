@@ -2,7 +2,7 @@ name: Build and Push Docker Image
 
 on:
   push:
-    branches: [ "master", "main", "dev" ]
+    branches: [ "stable", "dev" ]
   workflow_dispatch:
 
 env:
@@ -40,8 +40,9 @@ jobs:
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           tags: |
-            type=raw,value=latest,enable=${{ github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main' }}
+            type=raw,value=latest,enable=${{ github.ref == 'refs/heads/dev' }}
             type=raw,value=dev,enable=${{ github.ref == 'refs/heads/dev' }}
+            type=raw,value=stable,enable=${{ github.ref == 'refs/heads/stable' }}
             type=sha
 
       - name: Build and push Docker image
